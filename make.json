@@ -1,0 +1,36 @@
+{
+    "info": {
+        "name": "WorldEdit",
+        "description": "WorldEdit for InnerCore",
+        "author": "WolfTeam",
+        "version": "1.5",
+        "icon": "icon.png",
+        "api": "CoreEngine"
+    },
+    "resources": [
+        {
+            "path": "assets/res",
+            "type": "resource_directory"
+        }
+    ],
+    "sources": [
+        {
+            "source": "dev",
+            "target": "main.js",
+            "type": "main",
+            "language": "typescript"
+        },
+        {
+            "source": "launcher.js",
+            "type": "launcher",
+            "language": "javascript"
+        }
+    ],
+    "compile": [],
+    "additional": [
+        {
+            "source": "assets/root/*",
+            "targetDir": "."
+        }
+    ]
+}
