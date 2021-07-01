@@ -16,3 +16,16 @@ function roundFloat(x: number, y: number = 10): number {
 }
 
 type Dict<T = any> = { [key: string]: T };
+
+function __n<T>(count: number, one: T, multi: T): T {
+    return count == 1 ? one : multi;
+}
+
+function copyObject(target, ...sources) {
+    for (let i in sources) {
+        const source = sources[i];
+        for (let key in source)
+            target[key] = source[key];
+    }
+    return target;
+}

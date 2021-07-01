@@ -24,11 +24,16 @@ namespace Commands {
         return list.hasOwnProperty(name);
     }
     export function invoke(name: string, cmd: string[]): void {
-        const command = list[name];
+        const command = get(name);
         if (!command) throw new Error(`Command "${name}" not been register`);
 
         command.call(cmd);
     }
+
+    export function get(name: string): Info | null {
+        return list[name] || null;
+    }
+
 }
 
 Callback.addCallback("NativeCommand", function (command) {
