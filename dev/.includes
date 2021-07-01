@@ -3,4 +3,10 @@
 
 # nocheck
 
-**/*.ts
+header.ts
+
+modules/*.ts
+
+footer/*.ts
+
+# API.ts

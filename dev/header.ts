@@ -10,3 +10,9 @@
             https://github.com/Wolf-Team/WorldEdit
     VK: https://vk.com/wolf___team
 */
+
+function roundFloat(x: number, y: number = 10): number {
+    return Math.round(x * y) / y;
+}
+
+type Dict<T = any> = { [key: string]: T };
