@@ -53,6 +53,11 @@ namespace WorldEdit {
     export function toggleWand(): void {
         enabled = !enabled;
     }
+
+    export function parseBlockInfo(info: string): [number, number] {
+        const block = info.split(":");
+        return [parseInt(block[0]), block[1] ? parseInt(block[1]) : 0];
+    }
 }
 
 //History

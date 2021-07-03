@@ -212,22 +212,33 @@ Commands.register({
             const block: string[] = args[0].split(":");
             const id: number = parseInt(block[0]);
             const data: number = block[1] ? parseInt(block[1]) : 0;
-            var undo = [];
+            const undo: SetHistoryObject = {
+                blocks: [],
+                set: [id, data]
+            };
             let count: number = 0;
-            const pos1 = WorldEdit.getPosition(0);
-            const pos2 = WorldEdit.getPosition(1);
             const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
 
-            for (var x = pos1.x; x <= pos2.x; x++) {
+            const pos1 = WorldEdit.getPosition(0);
+            const pos2 = WorldEdit.getPosition(1);
+
+            const end_x = pos1.x > pos2.x ? pos1.x : pos2.x;
+            const start_x = pos1.x > pos2.x ? pos2.x : pos1.x;
+            const end_y = pos1.y > pos2.y ? pos1.y : pos2.y;
+            const start_y = pos1.y > pos2.y ? pos2.y : pos1.y;
+            const end_z = pos1.z > pos2.z ? pos1.z : pos2.z;
+            const start_z = pos1.z > pos2.z ? pos2.z : pos1.z;
+
+            for (var x = start_x; x <= end_x; x++) {
                 if (!WorldEdit.checkValidLimit(count)) break;
-                for (var y = pos1.y; y <= pos2.y; y++) {
+                for (var y = start_y; y <= end_y; y++) {
                     if (!WorldEdit.checkValidLimit(count)) break;
-                    for (var z = pos1.z; z <= pos2.z; z++) {
+                    for (var z = start_z; z <= end_z; z++) {
                         if (!WorldEdit.checkValidLimit(count)) break;
 
                         let tile = world.getBlock(x, y, z);
 
-                        undo.push([x, y, z, tile.id, tile.data]);
+                        undo.blocks.push([x, y, z, tile.id, tile.data]);
                         world.setBlock(x, y, z, id, data);
 
                         count++;
@@ -235,10 +246,7 @@ Commands.register({
                 }
             }
 
-            WorldEdit.History.push("//set", {
-                blocks: undo,
-                set: [id, data]
-            });
+            WorldEdit.History.push("//set", undo);
 
             Game.message(
                 Translation.translate(
@@ -273,7 +281,103 @@ Commands.register({
         });
     }
 });
+Commands.register({
+    name: "//replace",
+    description: "Replace all blocks of the specified block(s) with another block inside the region.",
+    args: "[from_block] <to_block>",
+    call: function (args) {
+        runOnMainThread(function () {
+            if (!args[0])
+                return Game.message(Translation.translate("Don't valid command."));
 
+            if (!WorldEdit.checkValidPosition())
+                return Game.message(Translation.translate("Set both positions."));
+
+
+            let from_block: [number, number] = null;
+            let to_block: [number, number] = null;
+
+            if (args[1]) {
+                from_block = WorldEdit.parseBlockInfo(args[0]);
+                to_block = WorldEdit.parseBlockInfo(args[1]);
+            } else {
+                to_block = WorldEdit.parseBlockInfo(args[0]);
+            }
+
+            let count: number = 0;
+            const undo: SetHistoryObject = { blocks: [], set: to_block };
+            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+
+
+
+            const pos1 = WorldEdit.getPosition(0);
+            const pos2 = WorldEdit.getPosition(1);
+
+            const end_x = pos1.x > pos2.x ? pos1.x : pos2.x;
+            const start_x = pos1.x > pos2.x ? pos2.x : pos1.x;
+            const end_y = pos1.y > pos2.y ? pos1.y : pos2.y;
+            const start_y = pos1.y > pos2.y ? pos2.y : pos1.y;
+            const end_z = pos1.z > pos2.z ? pos1.z : pos2.z;
+            const start_z = pos1.z > pos2.z ? pos2.z : pos1.z;
+
+            for (var x = start_x; x <= end_x; x++) {
+                if (!WorldEdit.checkValidLimit(count)) break;
+                for (var y = start_y; y <= end_y; y++) {
+                    if (!WorldEdit.checkValidLimit(count)) break;
+                    for (var z = start_z; z <= end_z; z++) {
+                        if (!WorldEdit.checkValidLimit(count)) break;
+
+                        const tile = World.getBlock(x, y, z);
+
+                        if (from_block) {
+                            if (tile.id == from_block[0] && (from_block[1] == -1 || tile.data == from_block[1])) {
+                                undo.blocks.push([x, y, z, tile.id, tile.data]);
+                                World.setBlock(x, y, z, to_block[0], to_block[1]);
+                                count++;
+                            }
+                        } else if (tile.id != 0) {
+                            undo.blocks.push([x, y, z, tile.id, tile.data]);
+                            World.setBlock(x, y, z, to_block[0], to_block[1]);
+                            count++;
+                        }
+                    }
+                }
+            }
+            WorldEdit.History.push("//replace", undo);
+
+            Game.message(
+                Translation.translate(
+                    __n(count, "%count% block changed.", "%count% blocks changed.")
+                ).replace("%count%", count.toString())
+            );
+        })
+    },
+    historyCall: function (action: WorldEdit.HistoryAction, data: any) {
+        if (!data) return;
+        const SetInfo: SetHistoryObject = (<SetHistoryObject>data);
+        runOnMainThread(function () {
+            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const count = SetInfo.blocks.length;
+            for (let i = 0; i < count; i++) {
+                const block: [number, number, number, number, number] = SetInfo.blocks[i];
+                switch (action) {
+                    case WorldEdit.HistoryAction.UNDO:
+                        world.setBlock(block[0], block[1], block[2], block[3], block[4]);
+                        break;
+                    case WorldEdit.HistoryAction.REDO:
+                        world.setBlock(block[0], block[1], block[2], SetInfo.set[0], SetInfo.set[1]);
+                        break;
+                }
+
+            }
+            Game.message(
+                Translation.translate(
+                    __n(count, "%count% block changed.", "%count% blocks changed.")
+                ).replace("%count%", count.toString())
+            );
+        });
+    }
+});
 
 /** Управление историей действий **/
 Commands.register({
@@ -282,8 +386,11 @@ Commands.register({
     args: "",
     call: function () {
         const undoInfo = WorldEdit.History.undo();
-        if (undoInfo)
-            Commands.get(undoInfo[0]).historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1]);
+        if (undoInfo) {
+            const command = Commands.get(undoInfo[0]);
+            if (!command.historyCall) throw new Error("Unregister historyCall for " + undoInfo[0]);
+            command.historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1]);
+        }
     },
 });
 Commands.register({
@@ -292,8 +399,11 @@ Commands.register({
     args: "",
     call: function () {
         const redoInfo = WorldEdit.History.redo();
-        if (redoInfo)
-            Commands.get(redoInfo[0]).historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1]);
+        if (redoInfo) {
+            const command = Commands.get(redoInfo[0]);
+            if (!command.historyCall) throw new Error("Unregister historyCall for " + redoInfo[0]);
+            command.historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1]);
+        }
     },
 });
 Commands.register({
