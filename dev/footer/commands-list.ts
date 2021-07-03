@@ -154,6 +154,20 @@ Commands.register({
     },
 });
 Commands.register({
+    name: "//desel",
+    description: "Deselects the current selection.",
+    args: "",
+    call: function () {
+        for(let i = 0; i < 2; i++)
+        WorldEdit.setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
+
+        Callback.invokeCallback("worldedit.desel");
+
+        Game.message(Translation.translate("The current selection is canceled."));
+    }
+});
+
+Commands.register({
     name: "//size",
     description: "Get size area.",
     args: "[-с]",
