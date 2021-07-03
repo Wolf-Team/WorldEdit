@@ -50,6 +50,9 @@ namespace WorldEdit {
     export function disableWand(): void {
         enabled = false;
     }
+    export function toggleWand(): void {
+        enabled = !enabled;
+    }
 
     setPosition(0, { x: Infinity, y: Infinity, z: Infinity });
     setPosition(1, { x: Infinity, y: Infinity, z: Infinity });

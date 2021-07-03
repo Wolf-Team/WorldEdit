@@ -154,6 +154,15 @@ Commands.register({
     },
 });
 Commands.register({
+    name: "//toggleeditwand",
+    description: "Toggles the edit wand selection mode, allowing you to use the edit wand item normally.",
+    args: "",
+    call: function () {
+        WorldEdit.toggleWand();
+        Game.message(Translation.translate("Mode wand edit switched."));
+    }
+});
+Commands.register({
     name: "//desel",
     description: "Deselects the current selection.",
     args: "",
