@@ -11,7 +11,12 @@ namespace WorldEdit {
                     vectors[i] = copyObject({}, point);
 
         vectors[pos] = copyObject({}, point);
+        Callback.invokeCallback("worldedit.set_position", pos, vectors[pos]);
     }
+    Callback.addCallback("worldedit.set_position", function (pos: number) {
+        Callback.invokeCallback("worldedit.set_position_" + pos, vectors[pos]);
+    });
+
     export function getPosition(pos: number): Vector {
         return copyObject({}, vectors[pos]);
     }
