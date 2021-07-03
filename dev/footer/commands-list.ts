@@ -167,8 +167,8 @@ Commands.register({
     description: "Deselects the current selection.",
     args: "",
     call: function () {
-        for(let i = 0; i < 2; i++)
-        WorldEdit.setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
+        for (let i = 0; i < 2; i++)
+            WorldEdit.setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
 
         Callback.invokeCallback("worldedit.desel");
 
@@ -193,7 +193,10 @@ Commands.register({
 });
 
 /** Операции с регионом **/
-
+interface SetHistoryObject {
+    blocks: [number, number, number, number, number][];
+    set: [number, number]
+};
 Commands.register({
     name: "//set",
     description: "Set all blocks inside the selection region to a specified block.",
@@ -209,7 +212,7 @@ Commands.register({
             const block: string[] = args[0].split(":");
             const id: number = parseInt(block[0]);
             const data: number = block[1] ? parseInt(block[1]) : 0;
-            // var undo = [];
+            var undo = [];
             let count: number = 0;
             const pos1 = WorldEdit.getPosition(0);
             const pos2 = WorldEdit.getPosition(1);
@@ -222,16 +225,20 @@ Commands.register({
                     for (var z = pos1.z; z <= pos2.z; z++) {
                         if (!WorldEdit.checkValidLimit(count)) break;
 
-                        // let tile = world.getBlock(x, y, z);
+                        let tile = world.getBlock(x, y, z);
 
-                        // undo.push([x, y, z, tile.id, tile.data]);
+                        undo.push([x, y, z, tile.id, tile.data]);
                         world.setBlock(x, y, z, id, data);
 
                         count++;
                     }
                 }
             }
-            // WorldEdit.undo.push(undo);
+
+            WorldEdit.History.push("//set", {
+                blocks: undo,
+                set: [id, data]
+            });
 
             Game.message(
                 Translation.translate(
@@ -239,5 +246,62 @@ Commands.register({
                 ).replace("%count%", count.toString())
             );
         });
+    },
+    historyCall: function (action: WorldEdit.HistoryAction, data: any) {
+        if (!data) return;
+        const SetInfo: SetHistoryObject = (<SetHistoryObject>data);
+        runOnMainThread(function () {
+            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const count = SetInfo.blocks.length;
+            for (let i = 0; i < count; i++) {
+                const block: [number, number, number, number, number] = SetInfo.blocks[i];
+                switch (action) {
+                    case WorldEdit.HistoryAction.UNDO:
+                        world.setBlock(block[0], block[1], block[2], block[3], block[4]);
+                        break;
+                    case WorldEdit.HistoryAction.REDO:
+                        world.setBlock(block[0], block[1], block[2], SetInfo.set[0], SetInfo.set[1]);
+                        break;
+                }
+
+            }
+            Game.message(
+                Translation.translate(
+                    __n(count, "%count% block changed.", "%count% blocks changed.")
+                ).replace("%count%", count.toString())
+            );
+        });
     }
+});
+
+
+/** Управление историей действий **/
+Commands.register({
+    name: "//undo",
+    description: "Undo your last action.",
+    args: "",
+    call: function () {
+        const undoInfo = WorldEdit.History.undo();
+        if (undoInfo)
+            Commands.get(undoInfo[0]).historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1]);
+    },
+});
+Commands.register({
+    name: "//redo",
+    description: "Redo your last (undone) action. This command replays back history and does not repeat the command.",
+    args: "",
+    call: function () {
+        const redoInfo = WorldEdit.History.redo();
+        if (redoInfo)
+            Commands.get(redoInfo[0]).historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1]);
+    },
+});
+Commands.register({
+    name: "//clearhistory",
+    description: "Clear your history.",
+    args: "",
+    call: function () {
+        WorldEdit.History.clear();
+        Game.message(Translation.translate("History cleared."));
+    },
 });

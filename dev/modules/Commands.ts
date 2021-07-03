@@ -3,7 +3,8 @@ namespace Commands {
         name: string;
         description?: string;
         args?: string;
-        call: (args: string[]) => void
+        call: (args: string[]) => void,
+        historyCall?: (actrion: WorldEdit.HistoryAction, data: any) => void
     }
 
     const list: Dict<Info> = {};
