@@ -2,12 +2,13 @@
 namespace WorldEdit {
     let vectors: Vector[] = [];
     let limit: number = -1;
+    let enabled: boolean = true;
 
     export function setPosition(pos: number, point: Vector) {
-        for (let i in vectors) {
-            if (Math.abs(vectors[i].x) == Infinity)
-                vectors[i] = copyObject({}, point);
-        }
+        if (point.x != Infinity && point.y != Infinity && point.z != Infinity)
+            for (let i in vectors)
+                if (Math.abs(vectors[i].x) == Infinity)
+                    vectors[i] = copyObject({}, point);
 
         vectors[pos] = copyObject({}, point);
     }
@@ -25,11 +26,29 @@ namespace WorldEdit {
         return getPosition(0).x != Infinity
     }
 
-    export function checkValidLimit(_limit: number) {
+    export function checkValidLimit(_limit: number): boolean {
         return limit == -1 || _limit <= limit;
     }
-    export function setLimit(_limit: number) {
+    export function setLimit(_limit: number): void {
         limit = _limit;
+    }
+
+    export function clear(): void {
+        const l = vectors.length;
+        for (let i = 0; i < l; i++)
+            setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
+
+        enableWand();
+    }
+
+    export function enabledWand(): boolean {
+        return enabled;
+    }
+    export function enableWand(): void {
+        enabled = true;
+    }
+    export function disableWand(): void {
+        enabled = false;
     }
 
     setPosition(0, { x: Infinity, y: Infinity, z: Infinity });
