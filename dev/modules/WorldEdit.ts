@@ -4,8 +4,6 @@ namespace WorldEdit {
     let limit: number = -1;
     let enabled: boolean = true;
 
-
-
     export function setPosition(pos: number, point: Vector) {
         if (point.x != Infinity && point.y != Infinity && point.z != Infinity)
             for (let i in vectors)
@@ -55,6 +53,10 @@ namespace WorldEdit {
     export function toggleWand(): void {
         enabled = !enabled;
     }
+}
+
+//History
+namespace WorldEdit {
 
     type HistoryItem = [string, any];
     class HistoryStack {
@@ -84,13 +86,7 @@ namespace WorldEdit {
     }
 
     export const History = new HistoryStack();
-    export enum HistoryAction {
-        UNDO, REDO
-    }
-
-
-    setPosition(0, { x: Infinity, y: Infinity, z: Infinity });
-    setPosition(1, { x: Infinity, y: Infinity, z: Infinity });
+    export enum HistoryAction { UNDO, REDO };
 }
 
 //For commands
@@ -99,5 +95,10 @@ namespace WorldEdit {
     export const getCommand = Commands.get;
     export const invokeCommand = Commands.invoke;
 }
+
+
+
+WorldEdit.setPosition(0, { x: Infinity, y: Infinity, z: Infinity });
+WorldEdit.setPosition(1, { x: Infinity, y: Infinity, z: Infinity });
 
 ModAPI.registerAPI("WorldEdit", WorldEdit);
