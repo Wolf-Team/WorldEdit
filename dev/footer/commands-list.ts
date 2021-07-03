@@ -415,3 +415,124 @@ Commands.register({
         Game.message(Translation.translate("History cleared."));
     },
 });
+
+
+/** Other **/
+Commands.register({
+    name: "//r",
+    description: "Work with the region.",
+    args: "<type> [args]",
+    call: function (args) {
+        switch (args[0]) {
+            case "help":
+            case "?":
+            case undefined:
+                const list = [
+                    ["help", "<page>", "Commands for working with the region"],
+                    ["up", "<count>", "Raise the selected region by the specified number of blocks"],
+                    ["down", "<count>", "Lower the selected region by the specified number of blocks"],
+                    ["pos1", "[<x> <y> <z>]", Commands.get("//pos1").description],
+                    ["pos2", "[<x> <y> <z>]", Commands.get("//pos2").description],
+                ];
+
+                var page = args[0] ? parseInt(args[0]) : 1;
+                var _page = page - 1;
+                var message = "";
+                var count = 0;
+                for (var i in list) {
+                    count++;
+                    if (count <= 6 * _page && count > 6 * page) continue;
+                    var cmd = list[i];
+                    message += "//region " + cmd[0] + " ";
+                    if (cmd[1] != null)
+                        message += cmd[1] + " ";
+                    message += "- " + Translation.translate(cmd[2]) + "\n";
+                }
+
+                Game.message(
+                    Translation.translate("===Help [Page %page%]===\n%cmd%===Help [Page %page%]===")
+                        .replace(/(%page)/g, page.toString())
+                        .replace("%cmd%", message)
+                );
+                break;
+            case "up": {
+                if (!args[1])
+                    return Game.message(Translation.translate("Don't valid command."));
+
+                if (!WorldEdit.checkValidPosition())
+                    return Game.message(Translation.translate("Set both positions."));
+
+                const up = parseInt(args[1]);
+                if (isNaN(up))
+                    return Game.message(Translation.translate("Don't valid command."));
+
+                const pos1 = WorldEdit.getPosition(0);
+                const pos2 = WorldEdit.getPosition(1);
+                if (pos1.y > pos2.y) {
+                    pos1.y += up;
+                    WorldEdit.setPosition(0, pos1);
+                } else {
+                    pos2.y += up;
+                    WorldEdit.setPosition(1, pos2);
+                }
+
+                Game.message(
+                    Translation.translate("The region is raised to %area%")
+                        .replace("%area%",
+                            Translation.translate(__n(up, "%count% block.", "%count% blocks."))
+                                .replace("%count%", up.toString())
+                        )
+                );
+
+            } break;
+            case "down": {
+                if (!args[1])
+                    return Game.message(Translation.translate("Don't valid command."));
+
+                if (!WorldEdit.checkValidPosition())
+                    return Game.message(Translation.translate("Set both positions."));
+
+                const down = parseInt(args[1]);
+                if (isNaN(down))
+                    return Game.message(Translation.translate("Don't valid command."));
+
+                const pos1 = WorldEdit.getPosition(0);
+                const pos2 = WorldEdit.getPosition(1);
+                if (pos1.y < pos2.y) {
+                    pos1.y -= down;
+                    WorldEdit.setPosition(0, pos1);
+                } else {
+                    pos2.y -= down;
+                    WorldEdit.setPosition(1, pos2);
+                }
+
+                Game.message(
+                    Translation.translate("The region is raised to %area%")
+                        .replace("%area%",
+                            Translation.translate(__n(down, "%count% block.", "%count% blocks."))
+                                .replace("%count%", down.toString())
+                        )
+                );
+            } break;
+            case "pos1":
+            case "pos2":
+                const _args = args; _args.shift();
+                Commands.invoke("//" + args[0], _args);
+                break;
+            default:
+                return Game.message(Translation.translate("Don't valid command."));
+        }
+    }
+});
+Commands.register({
+    name: "//reg",
+    description: "Work with the region.",
+    args: "<type> [args]",
+    call: Commands.get("//r").call
+});
+Commands.register({
+    name: "//region",
+    description: "Work with the region.",
+    args: "<type> [args]",
+    call: Commands.get("//r").call
+});
