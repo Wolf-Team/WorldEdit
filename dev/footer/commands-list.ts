@@ -332,12 +332,12 @@ Commands.register({
                         if (from_block) {
                             if (tile.id == from_block[0] && (from_block[1] == -1 || tile.data == from_block[1])) {
                                 undo.blocks.push([x, y, z, tile.id, tile.data]);
-                                World.setBlock(x, y, z, to_block[0], to_block[1]);
+                                world.setBlock(x, y, z, to_block[0], to_block[1]);
                                 count++;
                             }
                         } else if (tile.id != 0) {
                             undo.blocks.push([x, y, z, tile.id, tile.data]);
-                            World.setBlock(x, y, z, to_block[0], to_block[1]);
+                            world.setBlock(x, y, z, to_block[0], to_block[1]);
                             count++;
                         }
                     }
