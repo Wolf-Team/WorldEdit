@@ -34,6 +34,10 @@ namespace Commands {
         return list[name] || null;
     }
 
+    export function getListCommands(): Dict<Info> {
+        return copyRecObject(list);
+    }
+
 }
 
 Callback.addCallback("NativeCommand", function (command) {

@@ -29,3 +29,15 @@ function copyObject(target, ...sources) {
     }
     return target;
 }
+
+function copyRecObject(target, ...sources) {
+    for (let i in sources) {
+        const source = sources[i];
+        for (let key in source) {
+            const field = source[key];
+
+            target[key] = typeof field == "object" ? copyRecObject({}, field) : field;
+        }
+    }
+    return target;
+}
