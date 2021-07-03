@@ -1,5 +1,68 @@
 /** Общие команды **/
+Commands.register({
+    name: "//help",
+    description: "Help.",
+    args: "[page/command]",
+    call: function (args) {
+        var page = args[0] ? parseInt(args[0]) : 1;
 
+        if (isNaN(page)) {
+            var cmd = args[0];
+            if (!Commands.has(args[0]))
+                cmd = "//" + args[0];
+
+
+            if (Commands.has(cmd)) {
+                const command = Commands.get(cmd);
+
+                var message = command.name + " ";
+                if (command.args != null) message += command.args + " ";
+                message += "- " + Translation.translate(command.description);
+
+                Game.message(message);
+            } else {
+                Game.message(Translation.translate("There is no such command."));
+            }
+        } else {
+            const _page = page - 1;
+            let message: string = "";
+
+            const commands = Object.values(Commands.getListCommands());
+            let i = 6 * _page;
+            const l = i + 6;
+
+            for (; i < l; i++) {
+                const command = commands[i];
+                message += command.name + " ";
+                if (command.args != null) message += command.args + " ";
+                message += "- " + Translation.translate(command.description) + "\n";
+            }
+            Game.message(Translation.translate("===Help [Page %page%]===\n%cmd%===Help [Page %page%]===").replace(/(%page%)/g, page.toString()).replace("%cmd%", message));
+        }
+    }
+});
+Commands.register({
+    name: "//?",
+    description: "Help.",
+    args: "[page/command]",
+    call: Commands.get("//help").call
+});
+Commands.register({
+    name: "//limit",
+    description: "Set the maximum number of <limit> blocks used for commands. Acts only on you. Used to prevent catastrophic incidents.",
+    args: "<limit>",
+    call: function (args) {
+        if (!args[0] || isNaN(parseInt(args[0])))
+            return Game.message(Translation.translate("Don't valid command."));
+
+        const newLimit = parseInt(args[0]);
+        WorldEdit.setLimit(newLimit);
+        Game.message(
+            Translation.translate("The maximum number of blocks used with the commands %blocks%.")
+                .replace(/(%blocks%)/g, newLimit.toString())
+        );
+    }
+});
 
 /** Перемещение **/
 /** Операции с биомами **/
@@ -127,7 +190,7 @@ Commands.register({
             let count: number = 0;
             const pos1 = WorldEdit.getPosition(0);
             const pos2 = WorldEdit.getPosition(1);
-            const world:BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
 
             for (var x = pos1.x; x <= pos2.x; x++) {
                 if (!WorldEdit.checkValidLimit(count)) break;
@@ -135,7 +198,7 @@ Commands.register({
                     if (!WorldEdit.checkValidLimit(count)) break;
                     for (var z = pos1.z; z <= pos2.z; z++) {
                         if (!WorldEdit.checkValidLimit(count)) break;
-                        
+
                         // let tile = world.getBlock(x, y, z);
 
                         // undo.push([x, y, z, tile.id, tile.data]);
