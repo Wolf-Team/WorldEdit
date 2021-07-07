@@ -7,3 +7,5 @@ output
 *.icmod
 _dev
 todo
+WorldEdit/
+*.zipp

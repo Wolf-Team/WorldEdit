@@ -4,26 +4,31 @@ namespace WorldEdit {
     let limit: number = -1;
     let enabled: boolean = true;
 
-    export function setPosition(pos: number, point: Vector) {
-        if (point.x != Infinity && point.y != Infinity && point.z != Infinity)
-            for (let i in vectors)
-                if (Math.abs(vectors[i].x) == Infinity)
-                    vectors[i] = copyObject({}, point);
-
+    export function setPosition(pos: number, point: Vector)
+    export function setPosition(pos: number, point: Vector, invokeCallback: false);
+    export function setPosition(pos: number, point: Vector, invokeCallback: boolean = true) {
         vectors[pos] = copyObject({}, point);
-        Callback.invokeCallback("worldedit.set_position", pos, vectors[pos]);
+        if (invokeCallback !== false)
+            Callback.invokeCallback("worldedit.set_position", pos, vectors[pos]);
     }
     Callback.addCallback("worldedit.set_position", function (pos: number) {
         Callback.invokeCallback("worldedit.set_position_" + pos, vectors[pos]);
     });
 
     export function getPosition(pos: number): Vector {
-        return copyObject({}, vectors[pos]);
+        if (vectors[pos].x != Infinity)
+            return copyObject({}, vectors[pos]);
+
+        for (let i = 0, l = vectors.length; i < l; i++)
+            if (vectors[i].x != Infinity)
+                return copyObject({}, vectors[i]);
+
+        return null;
     }
 
     export function getSizeArea(): number {
-        const pos1 = vectors[0];
-        const pos2 = vectors[1];
+        const pos1 = getPosition(0);
+        const pos2 = getPosition(1);
         return (Math.abs(pos1.x - pos2.x) + 1) * (Math.abs(pos1.y - pos2.y) + 1) * (Math.abs(pos1.z - pos2.z) + 1);
     }
 
@@ -108,7 +113,7 @@ namespace WorldEdit {
 
 
 
-WorldEdit.setPosition(0, { x: Infinity, y: Infinity, z: Infinity });
-WorldEdit.setPosition(1, { x: Infinity, y: Infinity, z: Infinity });
+WorldEdit.setPosition(0, { x: Infinity, y: Infinity, z: Infinity }, false);
+WorldEdit.setPosition(1, { x: Infinity, y: Infinity, z: Infinity }, false);
 
 ModAPI.registerAPI("WorldEdit", WorldEdit);
