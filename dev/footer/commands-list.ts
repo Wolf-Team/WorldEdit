@@ -268,10 +268,10 @@ Commands.register<SetServerData>({
             block: [id, data]
         };
     },
-    historyCall: function (action: WorldEdit.HistoryAction, data: any) {
+    historyServer: function (client, action, data) {
         const SetInfo: SetHistoryObject = (<SetHistoryObject>data);
         runOnMainThread(function () {
-            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const world: BlockSource = BlockSource.getDefaultForActor(client.getPlayerUid());
             const count = SetInfo.blocks.length;
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
@@ -285,7 +285,7 @@ Commands.register<SetServerData>({
                 }
 
             }
-            Game.message(
+            client.sendMessage(
                 Translation.translate(
                     __n(count, "%count% block changed.", "%count% blocks changed.")
                 ).replace("%count%", count.toString())
@@ -375,10 +375,10 @@ Commands.register<ReplaceServerData>({
             pattern: from_block
         }
     },
-    historyCall: function (action: WorldEdit.HistoryAction, data: any) {
+    historyServer: function (client, action, data) {
         const SetInfo: SetHistoryObject = (<SetHistoryObject>data);
         runOnMainThread(function () {
-            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const world: BlockSource = BlockSource.getDefaultForActor(client.getPlayerUid());
             const count = SetInfo.blocks.length;
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
@@ -392,7 +392,7 @@ Commands.register<ReplaceServerData>({
                 }
 
             }
-            Game.message(
+            client.sendMessage(
                 Translation.translate(
                     __n(count, "%count% block changed.", "%count% blocks changed.")
                 ).replace("%count%", count.toString())
@@ -400,7 +400,6 @@ Commands.register<ReplaceServerData>({
         });
     }
 });
-
 Commands.register<SetServerData>({
     name: "//box",
     description: "Build walls, floor, and ceiling.",
@@ -470,10 +469,10 @@ Commands.register<SetServerData>({
             block: [id, data]
         }
     },
-    historyCall: function (action: WorldEdit.HistoryAction, data: any) {
+    historyServer: function (client, action, data) {
         const SetInfo: SetHistoryObject = (<SetHistoryObject>data);
         runOnMainThread(function () {
-            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const world: BlockSource = BlockSource.getDefaultForActor(client.getPlayerUid());
             const count = SetInfo.blocks.length;
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
@@ -487,7 +486,7 @@ Commands.register<SetServerData>({
                 }
 
             }
-            Game.message(
+            client.sendMessage(
                 Translation.translate(
                     __n(count, "%count% block changed.", "%count% blocks changed.")
                 ).replace("%count%", count.toString())
@@ -564,10 +563,10 @@ Commands.register<SetServerData>({
             block: [id, data]
         }
     },
-    historyCall: function (action: WorldEdit.HistoryAction, data: any) {
+    historyServer: function (client, action, data) {
         const SetInfo: SetHistoryObject = (<SetHistoryObject>data);
         runOnMainThread(function () {
-            const world: BlockSource = BlockSource.getCurrentWorldGenRegion();
+            const world: BlockSource = BlockSource.getDefaultForActor(client.getPlayerUid());
             const count = SetInfo.blocks.length;
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
@@ -581,7 +580,7 @@ Commands.register<SetServerData>({
                 }
 
             }
-            Game.message(
+            client.sendMessage(
                 Translation.translate(
                     __n(count, "%count% block changed.", "%count% blocks changed.")
                 ).replace("%count%", count.toString())
@@ -591,31 +590,63 @@ Commands.register<SetServerData>({
 });
 
 /** Управление историей действий **/
-Commands.register({
+interface HistoryServerData<T = any> {
+    command: string;
+    action: WorldEdit.HistoryAction;
+    data: T;
+}
+Commands.register<HistoryServerData>({
     name: "//undo",
     description: "Undo your last action.",
     args: "",
+    server: function (client, data) {
+        const command = <Commands.ServerInfo>Commands.get(data.command);
+        command.historyServer(client, data.action, data.data);
+    },
     call: function () {
-        return Game.message("Don't work");
         const undoInfo = WorldEdit.History.undo();
         if (undoInfo) {
-            const command = Commands.get(undoInfo[0]);
-            if (!command.historyCall) throw new Error("Unregister historyCall for " + undoInfo[0]);
-            command.historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1]);
+            const command = <Commands.ServerInfo>Commands.get(undoInfo[0]);
+
+            if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + undoInfo[0]);
+            if (command.historyCall)
+                return {
+                    command: command.name,
+                    action: WorldEdit.HistoryAction.UNDO,
+                    data: command.historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1])
+                }
+            else
+                return {
+                    command: command.name,
+                    action: WorldEdit.HistoryAction.UNDO,
+                    data: undoInfo[1]
+                }
         }
     },
 });
-Commands.register({
+Commands.register<HistoryServerData>({
     name: "//redo",
     description: "Redo your last (undone) action. This command replays back history and does not repeat the command.",
     args: "",
+    server: (<Commands.ServerInfo>Commands.get("//undo")).server,
     call: function () {
-        return Game.message("Don't work");
         const redoInfo = WorldEdit.History.redo();
         if (redoInfo) {
-            const command = Commands.get(redoInfo[0]);
-            if (!command.historyCall) throw new Error("Unregister historyCall for " + redoInfo[0]);
-            command.historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1]);
+            const command = <Commands.ServerInfo>Commands.get(redoInfo[0]);
+
+            if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + redoInfo[0]);
+            if (command.historyCall)
+                return {
+                    command: command.name,
+                    action: WorldEdit.HistoryAction.REDO,
+                    data: command.historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1])
+                }
+            else
+                return {
+                    command: command.name,
+                    action: WorldEdit.HistoryAction.REDO,
+                    data: redoInfo[1]
+                }
         }
     },
 });

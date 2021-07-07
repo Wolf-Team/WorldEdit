@@ -3,19 +3,20 @@ interface SendServerCommand<T = any> {
     data: T
 }
 namespace Commands {
-    export interface Info {
+    export interface Info<H = any> {
         name: string;
         description?: string;
         args?: string;
         call: (args: string[]) => void,
-        historyCall?: (action: WorldEdit.HistoryAction, data: any) => void
+        historyCall?: (action: WorldEdit.HistoryAction, data: H) => void;
     }
 
-    export interface ServerInfo<T = any, R = null> extends Info {
+    export interface ServerInfo<T = any, R = null, H = any, HR = H> extends Info<H> {
         name: string;
         server: (client: NetworkClient, data: T) => R;
         call: (args: string[]) => T | void;
-        historyCall?: (action: WorldEdit.HistoryAction, data: any) => void
+        historyServer?: (client: NetworkClient, action: WorldEdit.HistoryAction, data: H) => void;
+        historyCall?: (action: WorldEdit.HistoryAction, data: H) => HR | void;
     }
 
     const list: Dict<Info | ServerInfo> = {};
@@ -74,6 +75,6 @@ Network.addServerPacket<SendServerCommand>("worldedit.invokeServerCommand", func
     if (undoData)
         client.send("worldedit.undoData", { command: cmd.name, data: undoData });
 });
-Network.addClientPacket<SendServerCommand>("worldedit.undoData", function(data){
+Network.addClientPacket<SendServerCommand>("worldedit.undoData", function (data) {
     WorldEdit.History.push(data.command, data.data);
 });
