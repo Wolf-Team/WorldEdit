@@ -614,23 +614,24 @@ Commands.register<HistoryServerData>({
     },
     call: function () {
         const undoInfo = WorldEdit.History.undo();
-        if (undoInfo) {
-            const command = <Commands.ServerInfo>Commands.get(undoInfo[0]);
 
-            if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + undoInfo[0]);
-            if (command.historyCall)
-                return {
-                    command: command.name,
-                    action: WorldEdit.HistoryAction.UNDO,
-                    data: command.historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1])
-                }
-            else
-                return {
-                    command: command.name,
-                    action: WorldEdit.HistoryAction.UNDO,
-                    data: undoInfo[1]
-                }
-        }
+        if (!undoInfo) return Game.message(Translation.translate("There is nothing to undo."));
+
+        const command = <Commands.ServerInfo>Commands.get(undoInfo[0]);
+
+        if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + undoInfo[0]);
+        if (command.historyCall)
+            return {
+                command: command.name,
+                action: WorldEdit.HistoryAction.UNDO,
+                data: command.historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1])
+            }
+        else
+            return {
+                command: command.name,
+                action: WorldEdit.HistoryAction.UNDO,
+                data: undoInfo[1]
+            }
     },
 });
 Commands.register<HistoryServerData>({
@@ -640,23 +641,25 @@ Commands.register<HistoryServerData>({
     server: (<Commands.ServerInfo>Commands.get("//undo")).server,
     call: function () {
         const redoInfo = WorldEdit.History.redo();
-        if (redoInfo) {
-            const command = <Commands.ServerInfo>Commands.get(redoInfo[0]);
 
-            if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + redoInfo[0]);
-            if (command.historyCall)
-                return {
-                    command: command.name,
-                    action: WorldEdit.HistoryAction.REDO,
-                    data: command.historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1])
-                }
-            else
-                return {
-                    command: command.name,
-                    action: WorldEdit.HistoryAction.REDO,
-                    data: redoInfo[1]
-                }
-        }
+        if (redoInfo) return Game.message(Translation.translate("There is nothing to undo."));
+
+        const command = <Commands.ServerInfo>Commands.get(redoInfo[0]);
+
+        if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + redoInfo[0]);
+        if (command.historyCall)
+            return {
+                command: command.name,
+                action: WorldEdit.HistoryAction.REDO,
+                data: command.historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1])
+            }
+        else
+            return {
+                command: command.name,
+                action: WorldEdit.HistoryAction.REDO,
+                data: redoInfo[1]
+            }
+
     },
 });
 Commands.register({

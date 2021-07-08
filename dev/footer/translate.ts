@@ -108,6 +108,14 @@ Translation.addTranslation("History cleared.", {
     ru: "История очищена.",
     en: "History cleared.",
 });
+Translation.addTranslation("There is nothing to undo.", {
+    en: "There is nothing to undo.",
+    ru: "Нечего отменить."
+});
+Translation.addTranslation("There is nothing to redo.", {
+    en: "There is nothing to redo.",
+    ru: "Нечего повтроить."
+});
 //wand
 Translation.addTranslation("Gives you the \"EditWand\" (by default, a wooden axe).", {
     ru: "Дает вам \"EditWand\" (по умолчанию - деревянный топор).",
