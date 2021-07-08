@@ -32,7 +32,7 @@ Commands.register({
             const pages = commands.length / inPage;
             let i = inPage * _page;
             let l = i + inPage;
-            if(l > commands.length)
+            if (l > commands.length)
                 l = commands.length;
 
             for (; i < l; i++) {
@@ -43,8 +43,8 @@ Commands.register({
             }
             Game.message(
                 Translation.translate("===Help [Page %page% of %pages%]===\n%cmd%===Help [Page %page% of %pages%]===")
-                    .replace(/(%page%)/g, page+"")
-                    .replace(/(%pages%)/g, pages+"")
+                    .replace(/(%page%)/g, page + "")
+                    .replace(/(%pages%)/g, pages + "")
                     .replace("%cmd%", message)
             );
         }
@@ -504,7 +504,7 @@ Commands.register<SetServerData>({
     }
 });
 Commands.register<SetServerData>({
-    name: "//wall",
+    name: "//walls",
     description: "Build walls, floor, and ceiling.",
     args: "<block>",
     server: function (client, data) {
