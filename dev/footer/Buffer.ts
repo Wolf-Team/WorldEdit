@@ -1,4 +1,4 @@
-type tBuffer = [number, number, number, Tile][];
+type tBuffer = [number, number, number, number, number][];
 var Buffer: tBuffer = [];
 
 Commands.register({
@@ -33,7 +33,7 @@ Commands.register({
                         coord.z = Math.round(coord.z);
                         if (block.id == 0 && with_air == false)
                             continue;
-                        Buffer.push([coord.x - x, coord.y - y, coord.z - z, block]);
+                        Buffer.push([coord.x - x, coord.y - y, coord.z - z, block.id, block.data]);
                     }
                 }
             }
@@ -67,7 +67,7 @@ Commands.register<CutServerObject>({
                         coord.z = Math.round(coord.z);
                         if (block.id == 0 && data.with_air == 0)
                             continue;
-                        Buffer.push([coord.x - x, coord.y - y, coord.z - z, block]);
+                        Buffer.push([coord.x - x, coord.y - y, coord.z - z, block.id, block.data]);
                         world.setBlock(x, y, z, 0, 0);
                     }
                 }
@@ -115,7 +115,7 @@ Commands.register<tBuffer>({
             coord.z = Math.round(coord.z);
             world.setBlock(coord.x - data[i][0],
                 coord.y - data[i][1],
-                coord.z - data[i][2], data[i][3].id, data[i][3].data);
+                coord.z - data[i][2], data[i][3], data[i][4]);
         }
 
         client.sendMessage(
