@@ -66,9 +66,9 @@ Translation.addTranslation("Help.", {
     ru: "Помощь.",
     en: "Help.",
 });
-Translation.addTranslation("===Help [Page %page%]===\n%cmd%===Help [Page %page%]===", {
-    ru: "===Помощь(Страница %page%)===\n%cmd%===Помощь(Страница %page%)===",
-    en: "===Help [Page %page%]===\n%cmd%===Help [Page %page%]===",
+Translation.addTranslation("===Help [Page %page% of %pages%]===\n%cmd%===Help [Page %page% of %pages%]===", {
+    ru: "===Помощь(Страница %page% из %pages%)===\n%cmd%===Помощь(Страница %page% из %pages%)===",
+    en: "===Help [Page %page% of %pages%]===\n%cmd%===Help [Page %page% of %pages%]===",
 });
 //pos
 Translation.addTranslation("Set selection position #1 to the block above the one that you are standing on.", {

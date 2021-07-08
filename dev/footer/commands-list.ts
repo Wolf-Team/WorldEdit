@@ -25,11 +25,15 @@ Commands.register({
             }
         } else {
             const _page = page - 1;
+            const inPage = 6;
             let message: string = "";
 
             const commands = Object.values(Commands.getListCommands());
-            let i = 6 * _page;
-            const l = i + 6;
+            const pages = commands.length / inPage;
+            let i = inPage * _page;
+            let l = i + inPage;
+            if(l > commands.length)
+                l = commands.length;
 
             for (; i < l; i++) {
                 const command = commands[i];
@@ -37,7 +41,12 @@ Commands.register({
                 if (command.args != null) message += command.args + " ";
                 message += "- " + Translation.translate(command.description) + "\n";
             }
-            Game.message(Translation.translate("===Help [Page %page%]===\n%cmd%===Help [Page %page%]===").replace(/(%page%)/g, page.toString()).replace("%cmd%", message));
+            Game.message(
+                Translation.translate("===Help [Page %page% of %pages%]===\n%cmd%===Help [Page %page% of %pages%]===")
+                    .replace(/(%page%)/g, page+"")
+                    .replace(/(%pages%)/g, pages+"")
+                    .replace("%cmd%", message)
+            );
         }
     }
 });
