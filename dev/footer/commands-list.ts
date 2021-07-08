@@ -642,7 +642,7 @@ Commands.register<HistoryServerData>({
     call: function () {
         const redoInfo = WorldEdit.History.redo();
 
-        if (redoInfo) return Game.message(Translation.translate("There is nothing to undo."));
+        if (!redoInfo) return Game.message(Translation.translate("There is nothing to undo."));
 
         const command = <Commands.ServerInfo>Commands.get(redoInfo[0]);
 
