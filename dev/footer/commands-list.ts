@@ -29,7 +29,7 @@ Commands.register({
             let message: string = "";
 
             const commands = Object.values(Commands.getListCommands());
-            const pages = commands.length / inPage;
+            const pages = Math.ceil(commands.length / inPage);
             let i = inPage * _page;
             let l = i + inPage;
             if (l > commands.length)
