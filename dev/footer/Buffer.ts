@@ -56,6 +56,7 @@ Commands.register<CutServerObject>({
             const world: BlockSource = BlockSource.getDefaultForActor(player);
 
             const Buffer: tBuffer = [];
+            const undo: tBuffer = [];
 
             for (let x = data.pos[0].x; x <= data.pos[1].x; x++) {
                 for (let y = data.pos[0].y; y <= data.pos[1].y; y++) {
@@ -68,6 +69,7 @@ Commands.register<CutServerObject>({
                         if (block.id == 0 && data.with_air == 0)
                             continue;
                         Buffer.push([coord.x - x, coord.y - y, coord.z - z, block.id, block.data]);
+                        undo.push([x, y, z, block.id, block.data]);
                         world.setBlock(x, y, z, 0, 0);
                     }
                 }
@@ -75,6 +77,7 @@ Commands.register<CutServerObject>({
 
             client.sendMessage(Translation.translate("Region cut."));
             client.send("worldedit.sendbuffer", Buffer);
+            WorldEdit.History.send(client, "//cut", undo);
         });
     },
     call: function (args) {
@@ -96,6 +99,21 @@ Commands.register<CutServerObject>({
                 { x: end_x, y: end_y, z: end_z }
             ],
             with_air: with_air
+        }
+    },
+    historyServer: function (client, action, data) {
+        const l = data.length;
+        const world = BlockSource.getDefaultForActor(client.getPlayerUid());
+        for (let i = 0; i < l; i++) {
+            const block = data[i];
+            switch (action) {
+                case WorldEdit.HistoryAction.UNDO:
+                    world.setBlock(block[0], block[1], block[2], block[3], block[4]);
+                    break;
+                case WorldEdit.HistoryAction.REDO:
+                    world.setBlock(block[0], block[1], block[2], 0, 0);
+                    break;
+            }
         }
     }
 });
