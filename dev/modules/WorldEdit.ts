@@ -4,8 +4,8 @@ namespace WorldEdit {
     let _limit: number = -1;
     let _enabledWand: boolean = true;
 
-    export function setPosition(pos: number, point: Vector)
-    export function setPosition(pos: number, point: Vector, invokeCallback: false);
+    export function setPosition(pos: number, point: Vector): void;
+    export function setPosition(pos: number, point: Vector, invokeCallback: false): void;
     export function setPosition(pos: number, point: Vector, invokeCallback: boolean = true) {
         _vectors[pos] = copyObject({}, point);
         if (invokeCallback !== false)
@@ -91,18 +91,20 @@ namespace WorldEdit {
 
     Network.addServerPacket<java.lang.String>("worldedit.connect", function (client, data) {
         const version = __mod__.getMultiplayerVersion();
+
         if (data == version)
             client.send("worldedit.connected", { success: 1 });
         else
-            client.send("worldedit.connected", { error: version });
+            client.send("worldedit.connected", version);
+
     });
-    Network.addClientPacket<{ error?: string, version?: string, success?: 1 }>("worldedit.connected", function (data) {
-        if (data.success) {
-            _enabled = true;
-        } else {
+    Network.addClientPacket<{ success?: 1 } | java.lang.String>("worldedit.connected", function (data) {
+        if (data instanceof java.lang.String || typeof data == "string") {
             _errorEnabled = Translation.translate("Different versions of WorldEdit.\nWorldEdit features are disabled.\nYour version is %version%.\nServer version: %server%.")
                 .replace("%version%", <string><any>__mod__.getMultiplayerVersion())
-                .replace("%server%", data.error);
+                .replace("%server%", <string><any>data);
+        } else {
+            _enabled = true;
         }
     });
 }
