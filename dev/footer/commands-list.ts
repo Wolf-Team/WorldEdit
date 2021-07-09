@@ -245,7 +245,7 @@ Commands.register<SetServerData>({
                     __n(count, "%count% block changed.", "%count% blocks changed.")
                 ).replace("%count%", count.toString())
             );
-            client.send("worldedit.undoData", { command: "//set", data: undo });
+            WorldEdit.History.send(client, { command: "//set", data: undo });
         });
     },
     call: function (args) {
@@ -339,7 +339,7 @@ Commands.register<ReplaceServerData>({
                 }
             }
 
-            client.send("worldedit.undoData", { command: "//replace", data: undo });
+            WorldEdit.History.send(client, { command: "//replace", data: undo });
             client.sendMessage(
                 Translation.translate(
                     __n(count, "%count% block changed.", "%count% blocks changed.")
@@ -440,7 +440,7 @@ Commands.register<SetServerData>({
                 }
             }
 
-            client.send("worldedit.undoData", { command: "//box", data: undo });
+            WorldEdit.History.send(client, { command: "//box", data: undo });
 
             client.sendMessage(
                 Translation.translate(
@@ -534,7 +534,7 @@ Commands.register<SetServerData>({
                 }
             }
 
-            client.send("worldedit.undoData", { command: "//wall", data: undo });
+            WorldEdit.History.send(client, { command: "//wall", data: undo });
 
             client.sendMessage(
                 Translation.translate(

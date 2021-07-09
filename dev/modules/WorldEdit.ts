@@ -112,7 +112,7 @@ namespace WorldEdit {
 //History
 namespace WorldEdit {
 
-    type HistoryItem = [string, any];
+    export type HistoryItem = { command: string, data: any };
     class HistoryStack {
         private list: HistoryItem[] = [];
         private index: number = 0;
@@ -121,12 +121,21 @@ namespace WorldEdit {
         public push(cmd: HistoryItem): void;
         public push(cmd: string, data: any): void;
         public push(cmd: string | HistoryItem, data?: any): void {
-            if (!Array.isArray(cmd))
-                cmd = [cmd, data];
+            if (typeof cmd == "string")
+                cmd = { command: cmd, data: data };
 
             this.list[this.index++] = cmd;
             this.count = this.index;
         }
+
+        public send(client: NetworkClient, cmd: HistoryItem): void;
+        public send(client: NetworkClient, cmd: string, data: any): void;
+        public send(client: NetworkClient, cmd: string | HistoryItem, data?: any) {
+            if (typeof cmd == "string")
+                cmd = { command: cmd, data: data };
+            client.send("worldedit.undoData", cmd);
+        }
+
         public undo(): HistoryItem {
             return this.list[--this.index];
         }
@@ -138,6 +147,11 @@ namespace WorldEdit {
             this.index = 0;
         };
     }
+
+
+    Network.addClientPacket<HistoryItem>("worldedit.undoData", function (data) {
+        WorldEdit.History.push(data);
+    });
 
     export const History = new HistoryStack();
     export enum HistoryAction { UNDO, REDO };

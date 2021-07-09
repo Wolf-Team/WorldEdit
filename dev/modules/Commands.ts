@@ -1,7 +1,3 @@
-interface SendServerCommand<T = any> {
-    command: string,
-    data: T
-}
 namespace Commands {
     export interface Info<H = any> {
         name: string;
@@ -71,12 +67,9 @@ Callback.addCallback("NativeCommand", function (command) {
     }
 });
 
-Network.addServerPacket<SendServerCommand>("worldedit.invokeServerCommand", function (client, data) {
+Network.addServerPacket<WorldEdit.HistoryItem>("worldedit.invokeServerCommand", function (client, data) {
     const cmd = <Commands.ServerInfo>Commands.get(data.command);
     const undoData = cmd.server(client, data.data);
     if (undoData)
-        client.send("worldedit.undoData", { command: cmd.name, data: undoData });
-});
-Network.addClientPacket<SendServerCommand>("worldedit.undoData", function (data) {
-    WorldEdit.History.push(data.command, data.data);
+        WorldEdit.History.send(client, { command: cmd.name, data: undoData });
 });
