@@ -58,7 +58,7 @@ Commands.register({
 });
 Commands.register({
     name: "//limit",
-    description: "Set the maximum number of <limit> blocks used for commands. Acts only on you. Used to prevent catastrophic incidents.",
+    description: "Set the maximum number of <limit> blocks used for commands. Works for host only. Used to prevent catastrophic incidents.",
     args: "<limit>",
     call: function (args) {
         if (!args[0] || isNaN(parseInt(args[0])))

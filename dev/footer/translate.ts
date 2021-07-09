@@ -31,10 +31,10 @@ Translation.addTranslation("There is no such command.", {
     ru: "Нет такой команды.",
     en: "There is no such command.",
 });
-//limit
-Translation.addTranslation("Set the maximum number of <limit> blocks used for commands. Acts only on you. Used to prevent catastrophic incidents.", {
-    ru: "Установить максимальное количество блоков <limit>, используемое при командах. Действует только на вас. Используется для предотвращения катастрофических инцидентов.",
-    en: "Set the maximum number of <limit> blocks used for commands. Acts only on you. Used to prevent catastrophic incidents.",
+//limУстановить максимальное количество блоков <limit>, используемое при командах. Работает только для хоста. Используется для предотвращения катастрофических инцидентов.it
+Translation.addTranslation("Set the maximum number of <limit> blocks used for commands. Works for host only. Used to prevent catastrophic incidents.", {
+    ru: "Установить максимальное количество блоков <limit>, используемое при командах. Работает только для хоста. Используется для предотвращения катастрофических инцидентов.",
+    en: "Set the maximum number of <limit> blocks used for commands. Works for host only. Used to prevent catastrophic incidents.",
 });
 Translation.addTranslation("The maximum number of blocks used with the commands %blocks%.", {
     ru: "Максимальное количество блоков, используемое при командах %blocks%.",
