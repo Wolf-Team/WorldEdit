@@ -3,25 +3,36 @@ namespace WorldEdit {
     let vectors: Vector[] = [];
     let limit: number = -1;
     let enabled: boolean = true;
+    let _vectors: Vector[] = [];
+    let _limit: number = -1;
+    let _enabledWand: boolean = true;
 
     export function setPosition(pos: number, point: Vector)
     export function setPosition(pos: number, point: Vector, invokeCallback: false);
     export function setPosition(pos: number, point: Vector, invokeCallback: boolean = true) {
         vectors[pos] = copyObject({}, point);
+        _vectors[pos] = copyObject({}, point);
         if (invokeCallback !== false)
             Callback.invokeCallback("worldedit.set_position", pos, vectors[pos]);
+            Callback.invokeCallback("worldedit.set_position", pos, _vectors[pos]);
     }
     Callback.addCallback("worldedit.set_position", function (pos: number) {
         Callback.invokeCallback("worldedit.set_position_" + pos, vectors[pos]);
+        Callback.invokeCallback("worldedit.set_position_" + pos, _vectors[pos]);
     });
 
     export function getPosition(pos: number): Vector {
         if (vectors[pos].x != Infinity)
             return copyObject({}, vectors[pos]);
+        if (_vectors[pos].x != Infinity)
+            return copyObject({}, _vectors[pos]);
 
         for (let i = 0, l = vectors.length; i < l; i++)
             if (vectors[i].x != Infinity)
                 return copyObject({}, vectors[i]);
+        for (let i = 0, l = _vectors.length; i < l; i++)
+            if (_vectors[i].x != Infinity)
+                return copyObject({}, _vectors[i]);
 
         return null;
     }
@@ -38,13 +49,18 @@ namespace WorldEdit {
 
     export function checkValidLimit(_limit: number): boolean {
         return limit == -1 || _limit <= limit;
+    export function checkValidLimit(limit: number): boolean {
+        return _limit == -1 || limit <= _limit;
     }
     export function setLimit(_limit: number): void {
         limit = _limit;
+    export function setLimit(limit: number): void {
+        _limit = limit;
     }
 
     export function clear(): void {
         const l = vectors.length;
+        const l = _vectors.length;
         for (let i = 0; i < l; i++)
             setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
 
@@ -53,15 +69,19 @@ namespace WorldEdit {
 
     export function enabledWand(): boolean {
         return enabled;
+        return _enabledWand;
     }
     export function enableWand(): void {
         enabled = true;
+        _enabledWand = true;
     }
     export function disableWand(): void {
         enabled = false;
+        _enabledWand = false;
     }
     export function toggleWand(): void {
         enabled = !enabled;
+        _enabledWand = !_enabledWand;
     }
 
     export function parseBlockInfo(info: string): [number, number] {
