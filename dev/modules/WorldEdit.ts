@@ -1,8 +1,6 @@
 //General
 namespace WorldEdit {
     let _vectors: Vector[] = [];
-    let _limit: number = -1;
-    let _enabledWand: boolean = true;
 
     export function setPosition(pos: number, point: Vector): void;
     export function setPosition(pos: number, point: Vector, invokeCallback: false): void;
@@ -36,6 +34,7 @@ namespace WorldEdit {
         return getPosition(0).x != Infinity
     }
 
+    let _limit: number = -1;
     export function checkValidLimit(limit: number): boolean {
         return _limit == -1 || limit <= _limit;
     }
@@ -43,28 +42,28 @@ namespace WorldEdit {
         _limit = limit;
     }
 
-    export function clear(): void {
-        const l = _vectors.length;
-        for (let i = 0; i < l; i++)
-            setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
-
-        enableWand();
-        _enabled = false;
-        _errorEnabled = null;
+    let _enabledWand: boolean = true;
+    let _enabledWandForActors: Dict<boolean> = {};
+    export function enabledWand(actor: number = null): boolean {
+        return actor ? (_enabledWandForActors[actor] || false) : _enabledWand;
     }
-
-    export function enabledWand(): boolean {
-        return _enabledWand;
+    export function setEnableWand(enable: boolean) {
+        _enabledWand = enable;
+        if (Network.inRemoteWorld())
+            Network.sendToServer("worldedit.enablewand", { enable: enable });
     }
     export function enableWand(): void {
-        _enabledWand = true;
+        setEnableWand(true);
     }
     export function disableWand(): void {
-        _enabledWand = false;
+        setEnableWand(false);
     }
     export function toggleWand(): void {
-        _enabledWand = !_enabledWand;
+        setEnableWand(!_enabledWand);
     }
+    Network.addServerPacket<{ enable: boolean }>("worldedit.enablewand", function (client, data) {
+        _enabledWandForActors[client.getPlayerUid()] = data.enable;
+    });
 
     export function parseBlockInfo(info: string, defaultData: number = 0): [number, number] {
         const block = info.split(":");
@@ -105,9 +104,10 @@ namespace WorldEdit {
     Network.addServerPacket<java.lang.String>("worldedit.connect", function (client, data) {
         const version = __mod__.getMultiplayerVersion();
 
-        if (data == version)
+        if (data == version) {
             client.send("worldedit.connected", { success: 1 });
-        else
+            _enabledWandForActors[client.getPlayerUid()] = true;
+        } else
             client.send("worldedit.connected", version);
 
     });
@@ -120,6 +120,18 @@ namespace WorldEdit {
             _enabled = true;
         }
     });
+
+
+    export function clear(): void {
+        const l = _vectors.length;
+        for (let i = 0; i < l; i++)
+            setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
+
+        enableWand();
+        _enabled = false;
+        _errorEnabled = null;
+        _enabledWandForActors = {};
+    }
 }
 
 //History

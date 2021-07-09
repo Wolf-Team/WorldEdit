@@ -12,7 +12,7 @@ Callback.addCallback("ItemUseLocalServer", function (coords, item, block, isExte
 //Set pos2
 Callback.addCallback("DestroyBlock", function (coords, block, player) {
     const actor = new PlayerActor(player);
-    if (WorldEdit.enabled() && actor.getGameMode() == EGameMode.CREATIVE && Entity.getCarriedItem(player).id == wand_id && WorldEdit.enabledWand()) {
+    if (WorldEdit.enabled() && actor.getGameMode() == EGameMode.CREATIVE && Entity.getCarriedItem(player).id == wand_id && WorldEdit.enabledWand(player)) {
         const client = Network.getClientForPlayer(player);
         if (client) {
             client.send("worldedit.setpos", {
@@ -25,7 +25,7 @@ Callback.addCallback("DestroyBlock", function (coords, block, player) {
 });
 Callback.addCallback("DestroyBlockStart", function (coords, block, player) {
     const actor = new PlayerActor(player);
-    if (WorldEdit.enabled() && actor.getGameMode() == EGameMode.SURVIVAL && Entity.getCarriedItem(player).id == wand_id && WorldEdit.enabledWand()) {
+    if (WorldEdit.enabled() && actor.getGameMode() == EGameMode.SURVIVAL && Entity.getCarriedItem(player).id == wand_id && WorldEdit.enabledWand(player)) {
         const client = Network.getClientForPlayer(player);
         if (client) {
             client.send("worldedit.setpos", {
