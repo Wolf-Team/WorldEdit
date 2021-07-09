@@ -117,6 +117,10 @@ Commands.register<CutServerObject>({
         }
     }
 });
+interface PasteHistoryObject {
+    cut: tBuffer,
+    paste: tBuffer
+}
 Commands.register<tBuffer>({
     name: "//paste",
     description: "Paste the copied area.",
@@ -125,15 +129,23 @@ Commands.register<tBuffer>({
         const count = data.length;
         const player = client.getPlayerUid();
         const world: BlockSource = BlockSource.getDefaultForActor(player);
+        const undo: PasteHistoryObject = {
+            cut: [],
+            paste: data
+        }
 
         for (let i = 0; i < count; i++) {
             const coord = Entity.getPosition(player);
             coord.x = Math.round(coord.x);
             coord.y = Math.round(coord.y);
             coord.z = Math.round(coord.z);
-            world.setBlock(coord.x - data[i][0],
-                coord.y - data[i][1],
-                coord.z - data[i][2], data[i][3], data[i][4]);
+
+            const x = coord.x - data[i][0];
+            const y = coord.y - data[i][1];
+            const z = coord.z - data[i][2];
+            const tile = world.getBlock(x, y, z);
+            world.setBlock(x, y, z, data[i][3], data[i][4]);
+            undo.cut.push([x, y, z, tile.id, tile.data]);
         }
 
         client.sendMessage(
@@ -141,11 +153,20 @@ Commands.register<tBuffer>({
                 __n(count, "%count% block changed.", "%count% blocks changed.")
             ).replace("%count%", count.toString())
         );
+        WorldEdit.History.send(client, "//paste", undo);
     },
     call: function () {
         const count = Buffer.length;
         if (count == 0) Game.message("Buffer empty");
         return Buffer;
+    },
+    historyServer:function(client, action, data:PasteHistoryObject){
+        const l = data.cut.length;
+        const world: BlockSource = BlockSource.getDefaultForActor(client.getPlayerUid());
+        for(let i = 0; i < l; i++){
+            const arr = action == WorldEdit.HistoryAction.UNDO ? data.cut : data.paste;
+            world.setBlock(arr[i][0], arr[i][1], arr[i][2], arr[i][3], arr[i][4]);
+        }
     }
 });
 
