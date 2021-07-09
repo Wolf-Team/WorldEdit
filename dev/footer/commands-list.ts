@@ -258,9 +258,10 @@ Commands.register<SetServerData>({
         if (!WorldEdit.checkValidPosition())
             return Game.message(Translation.translate("Set both positions."));
 
-        const block: string[] = args[0].split(":");
-        const id: number = parseInt(block[0]);
-        const data: number = block[1] ? parseInt(block[1]) : 0;
+
+        const block = WorldEdit.parseBlockInfo(args[0]);
+        const id: number = block[0];
+        const data: number = block[1];
 
         const pos1 = WorldEdit.getPosition(0);
         const pos2 = WorldEdit.getPosition(1);
@@ -362,7 +363,7 @@ Commands.register<ReplaceServerData>({
         let to_block: [number, number] = null;
 
         if (args[1]) {
-            from_block = WorldEdit.parseBlockInfo(args[0]);
+            from_block = WorldEdit.parseBlockInfo(args[0], -1);
             to_block = WorldEdit.parseBlockInfo(args[1]);
         } else {
             to_block = WorldEdit.parseBlockInfo(args[0]);
@@ -461,7 +462,7 @@ Commands.register<SetServerData>({
 
         const block = WorldEdit.parseBlockInfo(args[0]);
         const id = block[0];
-        const data = block[1] == -1 ? 0 : block[1];
+        const data = block[1];
 
         const pos1 = WorldEdit.getPosition(0);
         const pos2 = WorldEdit.getPosition(1);
@@ -555,7 +556,7 @@ Commands.register<SetServerData>({
 
         const block = WorldEdit.parseBlockInfo(args[0]);
         const id = block[0];
-        const data = block[1] == -1 ? 0 : block[1];
+        const data = block[1];
 
         const pos1 = WorldEdit.getPosition(0);
         const pos2 = WorldEdit.getPosition(1);

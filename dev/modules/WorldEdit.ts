@@ -66,9 +66,20 @@ namespace WorldEdit {
         _enabledWand = !_enabledWand;
     }
 
-    export function parseBlockInfo(info: string): [number, number] {
+    export function parseBlockInfo(info: string, defaultData: number = 0): [number, number] {
         const block = info.split(":");
-        return [parseInt(block[0]), block[1] ? parseInt(block[1]) : 0];
+
+        const data = block[1] ? parseInt(block[1]) : defaultData;
+
+        let id = parseInt(block[0]);
+        if (isNaN(id))
+            id = BlockID[block[0]] || BlockID[block[0].replace("block_", "")];
+        if (id === null)
+            throw new Error(`Unknown id "${block[0]}"`);
+        if (Network.inRemoteWorld())
+            id = Network.localToServerId(id);
+
+        return [id, data];
     }
 
     let _enabled: boolean = false;
