@@ -3,7 +3,7 @@
         "name": "WorldEdit",
         "description": "WorldEdit for InnerCore",
         "author": "WolfTeam",
-        "version": "1.5",
+        "version": "1.5.{datestamp}.{timestamp}",
         "icon": "icon.png",
         "api": "CoreEngine"
     },
