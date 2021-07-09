@@ -73,7 +73,7 @@ Commands.register<CutServerObject>({
                 }
             }
 
-            client.sendMessage(Translation.translate("Region copied."));
+            client.sendMessage(Translation.translate("Region cut."));
             client.send("worldedit.sendbuffer", Buffer);
         });
     },
