@@ -60,6 +60,8 @@ namespace Commands {
 }
 
 Callback.addCallback("NativeCommand", function (command) {
+    if (!WorldEdit.enabled()) return;
+
     const cmd = command.split(" ");
     const nameCmd = cmd[0];
     if (Commands.has(nameCmd)) {

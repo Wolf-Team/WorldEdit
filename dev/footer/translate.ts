@@ -185,3 +185,14 @@ Translation.addTranslation("The current selection is canceled.", {
     ru: "Текущее выделение отмененно.",
     en: "The current selection is canceled.",
 });
+
+
+Translation.addTranslation("Different versions of WorldEdit.\nWorldEdit features are disabled.\nYour version is %version%.\nServer version: %server%.", {
+    en: "Different versions of WorldEdit.\nWorldEdit features are disabled.\nYour version is %version%.\nServer version: %server%.",
+    ru: "Разные версии WorldEdit.\nФункции WorldEdit отключены.\nВаша версия: %version%.\nВерсия на сервере: %server%."
+});
+
+Translation.addTranslation("WorldEdit was not found on the server.", {
+    ru: "WorldEdit не найден на сервере.",
+    en: "WorldEdit was not found on the server."
+});

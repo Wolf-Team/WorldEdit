@@ -131,4 +131,6 @@ Commands.register<tBuffer>({
     }
 });
 
-Network.addClientPacket("worldedit.sendbuffer", function (data: tBuffer) { Buffer = data; });
+Network.addClientPacket("worldedit.sendbuffer", function (data: tBuffer) {
+    if (WorldEdit.enabled()) Buffer = data;
+});
