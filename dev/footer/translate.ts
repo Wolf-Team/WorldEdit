@@ -36,6 +36,10 @@ Translation.addTranslation("Set the maximum number of <limit> blocks used for co
     ru: "Установить максимальное количество блоков <limit>, используемое при командах. Работает только для хоста. Используется для предотвращения катастрофических инцидентов.",
     en: "Set the maximum number of <limit> blocks used for commands. Works for host only. Used to prevent catastrophic incidents.",
 });
+Translation.addTranslation("You are not a host.", {
+    en:"You are not a host.",
+    ru:"Вы не хост."
+});
 Translation.addTranslation("The maximum number of blocks used with the commands %blocks%.", {
     ru: "Максимальное количество блоков, используемое при командах %blocks%.",
     en: "The maximum number of blocks used with the commands %blocks%.",

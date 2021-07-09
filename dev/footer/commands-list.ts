@@ -61,6 +61,9 @@ Commands.register({
     description: "Set the maximum number of <limit> blocks used for commands. Works for host only. Used to prevent catastrophic incidents.",
     args: "<limit>",
     call: function (args) {
+        if(Network.inRemoteWorld())
+            return Game.message(Translation.translate("You are not a host."));
+
         if (!args[0] || isNaN(parseInt(args[0])))
             return Game.message(Translation.translate("Don't valid command."));
 
