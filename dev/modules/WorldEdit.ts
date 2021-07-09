@@ -98,6 +98,8 @@ namespace WorldEdit {
     Callback.addCallback("LevelDisplayed", function () {
         if (!_enabled)
             Game.message(_errorEnabled ? _errorEnabled : Translation.translate("WorldEdit was not found on the server."));
+        else
+            Game.message(Translation.translate("WorldEdit %version% is enabled!").replace("%version%", <string><any>__mod__.getMultiplayerVersion()));
     });
 
     Network.addServerPacket<java.lang.String>("worldedit.connect", function (client, data) {

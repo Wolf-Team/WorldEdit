@@ -200,3 +200,7 @@ Translation.addTranslation("WorldEdit was not found on the server.", {
     ru: "WorldEdit не найден на сервере.",
     en: "WorldEdit was not found on the server."
 });
+Translation.addTranslation("WorldEdit %version% is enabled!", {
+    en:"WorldEdit %version% is enabled!",
+    ru:"WorldEdit %version% включен!"
+});
