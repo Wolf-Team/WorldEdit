@@ -161,19 +161,19 @@ class WorldEdit {
         });
         Callback.addCallback("LevelPreLoaded", function () {
             if (Network.inRemoteWorld())
-                Network.sendToServer("worldedit.connect", { version: __mod__.getMultiplayerVersion() });
+                Network.sendToServer("worldedit.connect", { version: new String(__mod__.getMultiplayerVersion()) });
         });
         Callback.addCallback("LevelDisplayed", function () {
             if (!_this._enabled)
                 Game.message(_this._errorEnabled ? _this._errorEnabled : Translation.translate("WorldEdit was not found on the server."));
             else {
-                Game.message(Translation.translate("WorldEdit %version% is enabled!").replace("%version%", <string><any>__mod__.getMultiplayerVersion()));
+                Game.message(Translation.translate("WorldEdit %version% is enabled!").replace("%version%", __mod__.getMultiplayerVersion()));
                 _this.enableWand();
             }
         });
 
         Network.addServerPacket<{ version: string }>("worldedit.connect", function (client, data) {
-            const version = __mod__.getMultiplayerVersion();
+            const version = new String(__mod__.getMultiplayerVersion());
 
             if (data.version == version) {
                 client.send("worldedit.connected", { success: 1 });
