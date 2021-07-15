@@ -4,15 +4,15 @@ namespace Commands {
         description?: string;
         args?: string;
         call: (args: string[]) => void,
-        historyCall?: (action: WorldEdit.HistoryAction, data: H) => void;
+        historyCall?: (action: HistoryAction, data: H) => void;
     }
 
     export interface ServerInfo<T = any, R = null, H = any, HR = H> extends Info<H> {
         name: string;
         server: (client: NetworkClient, data: T) => R;
         call: (args: string[]) => T | void;
-        historyServer?: (client: NetworkClient, action: WorldEdit.HistoryAction, data: H) => void;
-        historyCall?: (action: WorldEdit.HistoryAction, data: H) => HR | void;
+        historyServer?: (client: NetworkClient, action: HistoryAction, data: H) => void;
+        historyCall?: (action: HistoryAction, data: H) => HR | void;
     }
 
     const list: Dict<Info | ServerInfo> = {};
@@ -67,7 +67,7 @@ Callback.addCallback("NativeCommand", function (command) {
     }
 });
 
-Network.addServerPacket<WorldEdit.HistoryItem>("worldedit.invokeServerCommand", function (client, data) {
+Network.addServerPacket<HistoryItem>("worldedit.invokeServerCommand", function (client, data) {
     const cmd = <Commands.ServerInfo>Commands.get(data.command);
     const undoData = cmd.server(client, data.data);
     if (undoData)

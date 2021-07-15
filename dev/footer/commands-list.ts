@@ -289,10 +289,10 @@ Commands.register<SetServerData>({
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
                 switch (action) {
-                    case WorldEdit.HistoryAction.UNDO:
+                    case HistoryAction.UNDO:
                         world.setBlock(block[0], block[1], block[2], block[3], block[4]);
                         break;
-                    case WorldEdit.HistoryAction.REDO:
+                    case HistoryAction.REDO:
                         world.setBlock(block[0], block[1], block[2], SetInfo.set[0], SetInfo.set[1]);
                         break;
                 }
@@ -396,10 +396,10 @@ Commands.register<ReplaceServerData>({
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
                 switch (action) {
-                    case WorldEdit.HistoryAction.UNDO:
+                    case HistoryAction.UNDO:
                         world.setBlock(block[0], block[1], block[2], block[3], block[4]);
                         break;
-                    case WorldEdit.HistoryAction.REDO:
+                    case HistoryAction.REDO:
                         world.setBlock(block[0], block[1], block[2], SetInfo.set[0], SetInfo.set[1]);
                         break;
                 }
@@ -490,10 +490,10 @@ Commands.register<SetServerData>({
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
                 switch (action) {
-                    case WorldEdit.HistoryAction.UNDO:
+                    case HistoryAction.UNDO:
                         world.setBlock(block[0], block[1], block[2], block[3], block[4]);
                         break;
-                    case WorldEdit.HistoryAction.REDO:
+                    case HistoryAction.REDO:
                         world.setBlock(block[0], block[1], block[2], SetInfo.set[0], SetInfo.set[1]);
                         break;
                 }
@@ -584,10 +584,10 @@ Commands.register<SetServerData>({
             for (let i = 0; i < count; i++) {
                 const block: [number, number, number, number, number] = SetInfo.blocks[i];
                 switch (action) {
-                    case WorldEdit.HistoryAction.UNDO:
+                    case HistoryAction.UNDO:
                         world.setBlock(block[0], block[1], block[2], block[3], block[4]);
                         break;
-                    case WorldEdit.HistoryAction.REDO:
+                    case HistoryAction.REDO:
                         world.setBlock(block[0], block[1], block[2], SetInfo.set[0], SetInfo.set[1]);
                         break;
                 }
@@ -605,7 +605,7 @@ Commands.register<SetServerData>({
 /** Управление историей действий **/
 interface HistoryServerData<T = any> {
     command: string;
-    action: WorldEdit.HistoryAction;
+    action: HistoryAction;
     data: T;
 }
 Commands.register<HistoryServerData>({
@@ -627,13 +627,13 @@ Commands.register<HistoryServerData>({
         if (command.historyCall)
             return {
                 command: command.name,
-                action: WorldEdit.HistoryAction.UNDO,
-                data: command.historyCall(WorldEdit.HistoryAction.UNDO, undoInfo[1])
+                action: HistoryAction.UNDO,
+                data: command.historyCall(HistoryAction.UNDO, undoInfo[1])
             }
         else
             return {
                 command: command.name,
-                action: WorldEdit.HistoryAction.UNDO,
+                action: HistoryAction.UNDO,
                 data: undoInfo[1]
             }
     },
@@ -654,13 +654,13 @@ Commands.register<HistoryServerData>({
         if (command.historyCall)
             return {
                 command: command.name,
-                action: WorldEdit.HistoryAction.REDO,
-                data: command.historyCall(WorldEdit.HistoryAction.REDO, redoInfo[1])
+                action: HistoryAction.REDO,
+                data: command.historyCall(HistoryAction.REDO, redoInfo[1])
             }
         else
             return {
                 command: command.name,
-                action: WorldEdit.HistoryAction.REDO,
+                action: HistoryAction.REDO,
                 data: redoInfo[1]
             }
 

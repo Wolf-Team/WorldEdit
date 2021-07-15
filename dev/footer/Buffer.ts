@@ -107,10 +107,10 @@ Commands.register<CutServerObject>({
         for (let i = 0; i < l; i++) {
             const block = data[i];
             switch (action) {
-                case WorldEdit.HistoryAction.UNDO:
+                case HistoryAction.UNDO:
                     world.setBlock(block[0], block[1], block[2], block[3], block[4]);
                     break;
-                case WorldEdit.HistoryAction.REDO:
+                case HistoryAction.REDO:
                     world.setBlock(block[0], block[1], block[2], 0, 0);
                     break;
             }
@@ -164,7 +164,7 @@ Commands.register<tBuffer>({
         const l = data.cut.length;
         const world: BlockSource = BlockSource.getDefaultForActor(client.getPlayerUid());
         for(let i = 0; i < l; i++){
-            const arr = action == WorldEdit.HistoryAction.UNDO ? data.cut : data.paste;
+            const arr = action == HistoryAction.UNDO ? data.cut : data.paste;
             world.setBlock(arr[i][0], arr[i][1], arr[i][2], arr[i][3], arr[i][4]);
         }
     }
