@@ -125,9 +125,9 @@ Translation.addTranslation("There is nothing to redo.", {
     ru: "Нечего повтроить."
 });
 //wand
-Translation.addTranslation("Gives you the \"EditWand\" (by default, a wooden axe).", {
-    ru: "Дает вам \"EditWand\" (по умолчанию - деревянный топор).",
-    en: "Gives you the \"EditWand\" (by default, a wooden axe).",
+Translation.addTranslation("Gives you the \"EditWand\".", {
+    ru: "Дает вам \"EditWand\".",
+    en: "Gives you the \"EditWand\".",
 });
 //region
 Translation.addTranslation("Work with the region.", {
@@ -207,4 +207,9 @@ Translation.addTranslation("WorldEdit was not found on the server.", {
 Translation.addTranslation("WorldEdit %version% is enabled!", {
     en:"WorldEdit %version% is enabled!",
     ru:"WorldEdit %version% включен!"
+});
+
+Translation.addTranslation("Get size area.", {
+    en:"Get size area.",
+    ru:"Получить размер выделенной зоны."
 });

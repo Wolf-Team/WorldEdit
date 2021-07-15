@@ -35,6 +35,7 @@ Commands.register({
             const _page = page - 1;
             let i = inPage * _page;
             let l = i + inPage;
+
             if (l > commands.length)
                 l = commands.length;
 
