@@ -49,8 +49,7 @@ namespace WorldEdit {
     }
     export function setEnableWand(enable: boolean) {
         _enabledWand = enable;
-        if (Network.inRemoteWorld())
-            Network.sendToServer("worldedit.enablewand", { enable: enable });
+        Network.sendToServer("worldedit.enablewand", { enable: enable });
     }
     export function enableWand(): void {
         setEnableWand(true);
@@ -97,8 +96,10 @@ namespace WorldEdit {
     Callback.addCallback("LevelDisplayed", function () {
         if (!_enabled)
             Game.message(_errorEnabled ? _errorEnabled : Translation.translate("WorldEdit was not found on the server."));
-        else
+        else {
             Game.message(Translation.translate("WorldEdit %version% is enabled!").replace("%version%", <string><any>__mod__.getMultiplayerVersion()));
+            enableWand();
+        }
     });
 
     Network.addServerPacket<java.lang.String>("worldedit.connect", function (client, data) {
@@ -106,7 +107,6 @@ namespace WorldEdit {
 
         if (data == version) {
             client.send("worldedit.connected", { success: 1 });
-            _enabledWandForActors[client.getPlayerUid()] = true;
         } else
             client.send("worldedit.connected", version);
 
