@@ -1,8 +1,10 @@
 namespace Commands {
-    export interface Info<H = any> {
+    export interface sInfo{
         name: string;
         description?: string;
         args?: string;
+    }
+    export interface Info<H = any> extends sInfo{
         call: (args: string[]) => void,
         historyCall?: (action: HistoryAction, data: H) => void;
     }

@@ -46,3 +46,28 @@ Object.values = function <T>(o: { [s: string]: T } | ArrayLike<T>): T[] {
         arr.push(o[s]);
     return arr;
 };
+
+
+function getHelpForCommands(commands: Commands.sInfo[], page: number = 1, inPage: number = 6, suffix:string = ""): string {
+    let message: string = "";
+    const pages = Math.ceil(commands.length / inPage);
+    if (page > pages) page = 1;
+
+    const _page = page - 1;
+    let i = inPage * _page;
+    let l = i + inPage;
+
+    if (l > commands.length)
+        l = commands.length;
+
+    for (; i < l; i++) {
+        const command = commands[i];
+        message += suffix + command.name + " ";
+        if (command.args != null) message += command.args + " ";
+        message += "- " + Translation.translate(command.description) + "\n";
+    }
+    return Translation.translate("===Help [Page %page% of %pages%]===\n%cmd%===Help [Page %page% of %pages%]===")
+        .replace(/(%page%)/g, page + "")
+        .replace(/(%pages%)/g, pages + "")
+        .replace("%cmd%", message);
+}

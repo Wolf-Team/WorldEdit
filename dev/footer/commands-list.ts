@@ -25,32 +25,7 @@ Commands.register({
                 Game.message(Translation.translate("There is no such command."));
             }
         } else {
-
-            const inPage = 6;
-            let message: string = "";
-            const commands = Object.values(Commands.getListCommands());
-            const pages = Math.ceil(commands.length / inPage);
-            if(page > pages) page = 1;
-
-            const _page = page - 1;
-            let i = inPage * _page;
-            let l = i + inPage;
-
-            if (l > commands.length)
-                l = commands.length;
-
-            for (; i < l; i++) {
-                const command = commands[i];
-                message += command.name + " ";
-                if (command.args != null) message += command.args + " ";
-                message += "- " + Translation.translate(command.description) + "\n";
-            }
-            Game.message(
-                Translation.translate("===Help [Page %page% of %pages%]===\n%cmd%===Help [Page %page% of %pages%]===")
-                    .replace(/(%page%)/g, page + "")
-                    .replace(/(%pages%)/g, pages + "")
-                    .replace("%cmd%", message)
-            );
+            Game.message(getHelpForCommands(Object.values(Commands.getListCommands()), page, 6));
         }
     }
 });
@@ -720,33 +695,35 @@ Commands.register({
             case "help":
             case "?":
             case undefined:
-                const list = [
-                    ["help", "<page>", "Commands for working with the region"],
-                    ["up", "<count>", "Raise the selected region by the specified number of blocks"],
-                    ["down", "<count>", "Lower the selected region by the specified number of blocks"],
-                    ["pos1", "[<x> <y> <z>]", Commands.get("//pos1").description],
-                    ["pos2", "[<x> <y> <z>]", Commands.get("//pos2").description],
+                const list:Commands.sInfo[] = [
+                    {
+                        name:"help",
+                        args:"<page>",
+                        description:"Commands for working with the region"
+                    },
+                    {
+                        name:"up",
+                        args:"<count>",
+                        description:"Raise the selected region by the specified number of blocks"
+                    },
+                    {
+                        name:"down",
+                        args:"<count>",
+                        description:"Lower the selected region by the specified number of blocks"
+                    },
+                    {
+                        name:"pos1",
+                        args:Commands.get("//pos1").args,
+                        description:Commands.get("//pos1").description
+                    },
+                    {
+                        name:"pos2",
+                        args:Commands.get("//pos2").args,
+                        description:Commands.get("//pos2").description
+                    }
                 ];
-
                 var page = args[0] ? parseInt(args[0]) : 1;
-                var _page = page - 1;
-                var message = "";
-                var count = 0;
-                for (var i in list) {
-                    count++;
-                    if (count <= 6 * _page && count > 6 * page) continue;
-                    var cmd = list[i];
-                    message += "//region " + cmd[0] + " ";
-                    if (cmd[1] != null)
-                        message += cmd[1] + " ";
-                    message += "- " + Translation.translate(cmd[2]) + "\n";
-                }
-
-                Game.message(
-                    Translation.translate("===Help [Page %page%]===\n%cmd%===Help [Page %page%]===")
-                        .replace(/(%page)/g, page.toString())
-                        .replace("%cmd%", message)
-                );
+                Game.message(getHelpForCommands(list, page, 6, "//region "));
                 break;
             case "up": {
                 if (!args[1])
