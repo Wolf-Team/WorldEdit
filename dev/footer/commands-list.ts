@@ -723,6 +723,8 @@ Commands.register({
                     }
                 ];
                 var page = args[1] ? parseInt(args[1]) : 1;
+                if(isNaN(page)) page = 1;
+
                 Game.message(getHelpForCommands(list, page, 6, "//region "));
                 break;
             case "up": {
