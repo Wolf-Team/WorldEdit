@@ -722,7 +722,7 @@ Commands.register({
                         description:Commands.get("//pos2").description
                     }
                 ];
-                var page = args[0] ? parseInt(args[0]) : 1;
+                var page = args[1] ? parseInt(args[1]) : 1;
                 Game.message(getHelpForCommands(list, page, 6, "//region "));
                 break;
             case "up": {
