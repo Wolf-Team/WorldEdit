@@ -89,9 +89,8 @@ namespace WorldEdit {
     Callback.addCallback("LevelSelected", function () {
         _enabled = true;
     });
-    Callback.addCallback("LevelPreLoaded", function () {
-        if (Network.inRemoteWorld())
-            Network.sendToServer("worldedit.connect", __mod__.getMultiplayerVersion());
+    Callback.addCallback("ConnectingToHost", function () {
+        Network.sendToServer("worldedit.connect", __mod__.getMultiplayerVersion());
     });
     Callback.addCallback("LevelDisplayed", function () {
         if (!_enabled)
