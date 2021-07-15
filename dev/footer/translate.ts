@@ -11,9 +11,18 @@ Translation.addTranslation("%count% block changed.", {
     ru: "%count% блок изменено.",
     en: "%count% block changed.",
 });
+Translation.addTranslation("%count% block changed to \"%name%\".", {
+    ru: "%count% блок изменено на \"%name%\".",
+    en: "%count% block changed to \"%name%\".",
+});
+
 Translation.addTranslation("%count% blocks changed.", {
     ru: "%count% блоков изменено.",
     en: "%count% blocks changed.",
+});
+Translation.addTranslation("%count% blocks changed to \"%name%\".", {
+    ru: "%count% блоков изменено на \"%name%\".",
+    en: "%count% blocks changed to \"%name%\".",
 });
 Translation.addTranslation("%count% block.", {
     ru: "%count% блок.",

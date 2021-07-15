@@ -227,8 +227,9 @@ Commands.register<SetServerData>({
             }
 
             let msg = Translation.translate(
-                __n(count, "%count% block changed.", "%count% blocks changed.")
-            ).replace("%count%", count.toString());
+                __n(count, "%count% block changed to \"%name%\".", "%count% blocks changed to \"%name%\".")
+            ).replace("%count%", count.toString())
+            .replace("%name%", Item.getName(data.block[0], data.block[1]));
             const limit = WorldEdit.getLimit();
             if (limit != -1)
                 msg += "\n" + Translation.translate("Block limit: %count%.")
@@ -335,8 +336,9 @@ Commands.register<ReplaceServerData>({
 
             WorldEdit.History.send(client, { command: "//replace", data: undo });
             let msg = Translation.translate(
-                __n(count, "%count% block changed.", "%count% blocks changed.")
-            ).replace("%count%", count.toString());
+                __n(count, "%count% block changed to \"%name%\".", "%count% blocks changed to \"%name%\".")
+            ).replace("%count%", count.toString())
+            .replace("%name%", Item.getName(data.block[0], data.block[1]));
             const limit = WorldEdit.getLimit();
             if (limit != -1)
                 msg += "\n" + Translation.translate("Block limit: %count%.")
@@ -443,8 +445,9 @@ Commands.register<SetServerData>({
             WorldEdit.History.send(client, { command: "//box", data: undo });
 
             let msg = Translation.translate(
-                __n(count, "%count% block changed.", "%count% blocks changed.")
-            ).replace("%count%", count.toString());
+                __n(count, "%count% block changed to \"%name%\".", "%count% blocks changed to \"%name%\".")
+            ).replace("%count%", count.toString())
+            .replace("%name%", Item.getName(data.block[0], data.block[1]));
             const limit = WorldEdit.getLimit();
             if (limit != -1)
                 msg += "\n" + Translation.translate("Block limit: %count%.")
@@ -543,8 +546,9 @@ Commands.register<SetServerData>({
             WorldEdit.History.send(client, { command: "//wall", data: undo });
 
             let msg = Translation.translate(
-                __n(count, "%count% block changed.", "%count% blocks changed.")
-            ).replace("%count%", count.toString());
+                __n(count, "%count% block changed to \"%name%\".", "%count% blocks changed to \"%name%\".")
+            ).replace("%count%", count.toString())
+            .replace("%name%", Item.getName(data.block[0], data.block[1]));
             const limit = WorldEdit.getLimit();
             if (limit != -1)
                 msg += "\n" + Translation.translate("Block limit: %count%.")
