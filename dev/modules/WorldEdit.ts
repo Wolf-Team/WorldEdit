@@ -72,7 +72,10 @@ class WorldEdit {
         return this._limit == -1 || limit < this._limit;
     }
     public static setLimit(limit: number): void {
-        this._limit = limit;
+        Network.sendToAllClients("worldedit.setlimit", { limit: limit });
+    }
+    public static getLimit(): number {
+        return this._limit;
     }
 
 
@@ -192,6 +195,11 @@ class WorldEdit {
         //History
         Network.addClientPacket<HistoryItem>("worldedit.undoData", function (data) {
             _this.History.push(data);
+        });
+
+        //limit
+        Network.addClientPacket<{ limit: number }>("worldedit.setlimit", (data) => {
+            _this._limit = data.limit;
         });
 
         //init

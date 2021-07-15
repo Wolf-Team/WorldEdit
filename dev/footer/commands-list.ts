@@ -243,11 +243,16 @@ Commands.register<SetServerData>({
                     }
                 }
             }
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
+
             WorldEdit.History.send(client, { command: "//set", data: undo });
         });
     },
@@ -298,11 +303,14 @@ Commands.register<SetServerData>({
                 }
 
             }
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         });
     }
 });
@@ -344,11 +352,14 @@ Commands.register<ReplaceServerData>({
             }
 
             WorldEdit.History.send(client, { command: "//replace", data: undo });
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         })
     },
     call: function (args) {
@@ -405,11 +416,14 @@ Commands.register<ReplaceServerData>({
                 }
 
             }
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         });
     }
 });
@@ -446,11 +460,14 @@ Commands.register<SetServerData>({
 
             WorldEdit.History.send(client, { command: "//box", data: undo });
 
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         });
     },
     call: function (args) {
@@ -499,11 +516,14 @@ Commands.register<SetServerData>({
                 }
 
             }
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         });
     }
 });
@@ -540,11 +560,14 @@ Commands.register<SetServerData>({
 
             WorldEdit.History.send(client, { command: "//wall", data: undo });
 
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         });
     },
     call: function (args) {
@@ -593,11 +616,14 @@ Commands.register<SetServerData>({
                 }
 
             }
-            client.sendMessage(
-                Translation.translate(
-                    __n(count, "%count% block changed.", "%count% blocks changed.")
-                ).replace("%count%", count.toString())
-            );
+            let msg = Translation.translate(
+                __n(count, "%count% block changed.", "%count% blocks changed.")
+            ).replace("%count%", count.toString());
+            const limit = WorldEdit.getLimit();
+            if(limit != -1)
+                msg+="\n"+Translation.translate("Block limit: %count%.")
+                .replace("%count%", limit.toString());
+            client.sendMessage(msg);
         });
     }
 });
