@@ -5,6 +5,7 @@ Commands.register({
     args: "[page/command]",
     call: function (args) {
         var page = args[0] ? parseInt(args[0]) : 1;
+        if(page < 0) page = 1;
 
         if (isNaN(page)) {
             var cmd = args[0];
@@ -30,6 +31,8 @@ Commands.register({
 
             const commands = Object.values(Commands.getListCommands());
             const pages = Math.ceil(commands.length / inPage);
+            if(page > pages) page = 1;
+
             let i = inPage * _page;
             let l = i + inPage;
             if (l > commands.length)
