@@ -25,14 +25,14 @@ Commands.register({
                 Game.message(Translation.translate("There is no such command."));
             }
         } else {
-            const _page = page - 1;
+
             const inPage = 6;
             let message: string = "";
-
             const commands = Object.values(Commands.getListCommands());
             const pages = Math.ceil(commands.length / inPage);
             if(page > pages) page = 1;
 
+            const _page = page - 1;
             let i = inPage * _page;
             let l = i + inPage;
             if (l > commands.length)
