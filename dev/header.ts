@@ -10,12 +10,10 @@
             https://github.com/Wolf-Team/WorldEdit
     VK: https://vk.com/wolf___team
 */
-
+type Dict<T = any> = { [key: string]: T };
 function roundFloat(x: number, y: number = 10): number {
     return Math.round(x * y) / y;
 }
-
-type Dict<T = any> = { [key: string]: T };
 
 function __n<T>(count: number, one: T, multi: T): T {
     return count == 1 ? one : multi;

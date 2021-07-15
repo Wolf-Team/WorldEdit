@@ -35,7 +35,7 @@ class HistoryStack {
     };
 }
 
-class WorldEdit{
+class WorldEdit {
     //Poistion
     private static _vectors: Vector[] = [];
     public static setPosition(pos: number, point: Vector): void;
@@ -130,7 +130,7 @@ class WorldEdit{
     public static clear(): void {
         const l = this._vectors.length;
         for (let i = 0; i < l; i++)
-        this.setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
+            this.setPosition(i, { x: Infinity, y: Infinity, z: Infinity });
 
         this.enableWand();
         this._enabled = false;
@@ -140,7 +140,7 @@ class WorldEdit{
 
 
     //init worldedit
-    public static init(){
+    public static init() {
         const _this = this;
         //poistion additive callback
         Callback.addCallback("worldedit.set_position", function (pos: number) {
@@ -192,10 +192,25 @@ class WorldEdit{
         Network.addClientPacket<HistoryItem>("worldedit.undoData", function (data) {
             _this.History.push(data);
         });
+
+        //init
+
+        this.setPosition(0, { x: Infinity, y: Infinity, z: Infinity }, false);
+        this.setPosition(1, { x: Infinity, y: Infinity, z: Infinity }, false);
     }
 }
 
-WorldEdit.setPosition(0, { x: Infinity, y: Infinity, z: Infinity }, false);
-WorldEdit.setPosition(1, { x: Infinity, y: Infinity, z: Infinity }, false);
+WorldEdit.init();
 
 ModAPI.registerAPI("WorldEdit", WorldEdit);
+
+namespace ModAPI {
+    export declare function addAPICallback(name: "WorldEdit", call: (ob: WorldEdit) => void): void;
+}
+
+namespace Callback {
+    export declare function addCallback(name: "worldedit.desel", call: () => void): void;
+    export declare function addCallback(name: "worldedit.set_position", call: (num_position: number, position: Vector) => void): void;
+    export declare function addCallback(name: "worldedit.set_position_0", call: (position: Vector) => void): void;
+    export declare function addCallback(name: "worldedit.set_position_1", call: (position: Vector) => void): void;
+}
