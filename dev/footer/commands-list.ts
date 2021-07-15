@@ -623,18 +623,18 @@ Commands.register<HistoryServerData>({
 
         const command = <Commands.ServerInfo>Commands.get(undoInfo.command);
 
-        if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + undoInfo[0]);
+        if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + undoInfo.command);
         if (command.historyCall)
             return {
                 command: command.name,
                 action: HistoryAction.UNDO,
-                data: command.historyCall(HistoryAction.UNDO, undoInfo[1])
+                data: command.historyCall(HistoryAction.UNDO, undoInfo.data)
             }
         else
             return {
                 command: command.name,
                 action: HistoryAction.UNDO,
-                data: undoInfo[1]
+                data: undoInfo.data
             }
     },
 });
@@ -650,18 +650,18 @@ Commands.register<HistoryServerData>({
 
         const command = <Commands.ServerInfo>Commands.get(redoInfo.command);
 
-        if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + redoInfo[0]);
+        if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + redoInfo.command);
         if (command.historyCall)
             return {
                 command: command.name,
                 action: HistoryAction.REDO,
-                data: command.historyCall(HistoryAction.REDO, redoInfo[1])
+                data: command.historyCall(HistoryAction.REDO, redoInfo.data)
             }
         else
             return {
                 command: command.name,
                 action: HistoryAction.REDO,
-                data: redoInfo[1]
+                data: redoInfo.data
             }
 
     },
