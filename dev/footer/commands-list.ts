@@ -621,7 +621,7 @@ Commands.register<HistoryServerData>({
 
         if (!undoInfo) return Game.message(Translation.translate("There is nothing to undo."));
 
-        const command = <Commands.ServerInfo>Commands.get(undoInfo[0]);
+        const command = <Commands.ServerInfo>Commands.get(undoInfo.command);
 
         if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + undoInfo[0]);
         if (command.historyCall)
@@ -648,7 +648,7 @@ Commands.register<HistoryServerData>({
 
         if (!redoInfo) return Game.message(Translation.translate("There is nothing to undo."));
 
-        const command = <Commands.ServerInfo>Commands.get(redoInfo[0]);
+        const command = <Commands.ServerInfo>Commands.get(redoInfo.command);
 
         if (!command.historyCall && !command.historyServer) throw new Error("Unregister historyCall for " + redoInfo[0]);
         if (command.historyCall)
