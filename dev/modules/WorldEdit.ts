@@ -161,7 +161,7 @@ class WorldEdit {
         });
         Callback.addCallback("LevelPreLoaded", function () {
             if (Network.inRemoteWorld())
-                Network.sendToServer("worldedit.connect", __mod__.getMultiplayerVersion());
+                Network.sendToServer("worldedit.connect", { version: __mod__.getMultiplayerVersion() });
         });
         Callback.addCallback("LevelDisplayed", function () {
             if (!_this._enabled)
@@ -172,22 +172,22 @@ class WorldEdit {
             }
         });
 
-        Network.addServerPacket<java.lang.String>("worldedit.connect", function (client, data) {
+        Network.addServerPacket<{ version: string }>("worldedit.connect", function (client, data) {
             const version = __mod__.getMultiplayerVersion();
 
-            if (data == version) {
+            if (data.version == version) {
                 client.send("worldedit.connected", { success: 1 });
             } else
-                client.send("worldedit.connected", version);
+                client.send("worldedit.connected", { version: version });
 
         });
-        Network.addClientPacket<{ success?: 1 } | java.lang.String>("worldedit.connected", function (data) {
-            if (data instanceof java.lang.String || typeof data == "string") {
-                _this._errorEnabled = Translation.translate("Different versions of WorldEdit.\nWorldEdit features are disabled.\nYour version is %version%.\nServer version: %server%.")
-                    .replace("%version%", <string><any>__mod__.getMultiplayerVersion())
-                    .replace("%server%", <string><any>data);
-            } else {
+        Network.addClientPacket<{ success?: 1, version: string }>("worldedit.connected", function (data) {
+            if (data.success == 1) {
                 _this._enabled = true;
+            } else {
+                _this._errorEnabled = Translation.translate("Different versions of WorldEdit.\nWorldEdit features are disabled.\nYour version is %version%.\nServer version: %server%.")
+                    .replace("%version%", __mod__.getMultiplayerVersion())
+                    .replace("%server%", data.version);
             }
         });
 
