@@ -4,7 +4,7 @@ Translation.addTranslation("Set both positions.", {
     en: "Set both positions.",
 });
 Translation.addTranslation("Don't valid command.", {
-    ru: "Недействительная команда..",
+    ru: "Недействительная команда.",
     en: "Don't valid command.",
 });
 Translation.addTranslation("%count% block changed.", {

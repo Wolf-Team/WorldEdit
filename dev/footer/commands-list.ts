@@ -61,7 +61,7 @@ Commands.register({
     description: "Set the maximum number of <limit> blocks used for commands. Works for host only. Used to prevent catastrophic incidents.",
     args: "<limit>",
     call: function (args) {
-        if(Network.inRemoteWorld())
+        if (Network.inRemoteWorld())
             return Game.message(Translation.translate("You are not a host."));
 
         if (!args[0] || isNaN(parseInt(args[0])))
@@ -784,15 +784,21 @@ Commands.register({
         }
     }
 });
-Commands.register({
-    name: "//reg",
-    description: "Work with the region.",
-    args: "<type> [args]",
-    call: Commands.get("//r").call
-});
-Commands.register({
-    name: "//region",
-    description: "Work with the region.",
-    args: "<type> [args]",
-    call: Commands.get("//r").call
-});
+Commands.register((() => {
+    const cmd = Commands.get("//r");
+    return {
+        name: "//reg",
+        description: cmd.description,
+        args: cmd.args,
+        call: cmd.call
+    }
+})());
+Commands.register((() => {
+    const cmd = Commands.get("//r");
+    return {
+        name: "//region",
+        description: cmd.description,
+        args: cmd.args,
+        call: cmd.call
+    }
+})());

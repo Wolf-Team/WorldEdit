@@ -69,7 +69,7 @@ class WorldEdit {
     //limit
     private static _limit: number = -1;
     public static checkValidLimit(limit: number): boolean {
-        return this._limit == -1 || limit <= this._limit;
+        return this._limit == -1 || limit < this._limit;
     }
     public static setLimit(limit: number): void {
         this._limit = limit;
